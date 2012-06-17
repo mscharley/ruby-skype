@@ -3,7 +3,9 @@ require 'skype/errors/error_messages'
 require 'skype/errors/general_exception'
 
 class Skype
+  # This module is entirely for organisation purposes. Do not attempt to include it.
   module Errors
+    # This class allows the library to generate exceptions based on error codes from Skype easily.
     class ExceptionFactory
       # This function will raise an exception. It never returns.
       #

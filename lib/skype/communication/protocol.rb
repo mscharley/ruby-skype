@@ -2,6 +2,7 @@
 require 'observer'
 
 class Skype
+  # This module is entirely for organisation purposes. Do not attempt to include this.
   module Communication
     # Interface for the Skype::Communication::* classes. This provides basic input and output functionality with Skype.
     #
@@ -10,6 +11,7 @@ class Skype
     module Protocol
       include Observable
 
+      # The protocol version supported by this communication protocol
       attr_reader :protocol_version
 
       # Sends a message to Skype.
