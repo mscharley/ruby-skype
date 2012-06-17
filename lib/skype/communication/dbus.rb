@@ -61,7 +61,6 @@ class Skype
         unless @connected
           raise "You must be connected before sending data."
         end
-        puts "-> #{message}"
         @skype.Invoke(message)[0]
       end
 
@@ -77,7 +76,6 @@ class Skype
 
           # Process messages to us.
           if msg.interface == SKYPE_CLIENT_INTERFACE && msg.path == SKYPE_CLIENT_PATH
-            puts "<- #{msg.params[0]}"
             receive(msg.params[0])
           end
         end

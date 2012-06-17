@@ -15,6 +15,8 @@ class Skype
     else
       @skype = communication_protocol
     end
+
+    @skype.add_observer(self, :received_command)
   end
 
   # Connect to Skype and negotiate a communication channel
@@ -44,6 +46,10 @@ class Skype
 
   def send_raw_command(command)
     @skype.send(command)
+  end
+
+  def received_command(command)
+    puts "<- #{command}"
   end
 
   # The protocol version in use for the connection with Skype. This value is only reliable once connected.
