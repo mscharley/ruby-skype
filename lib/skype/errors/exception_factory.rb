@@ -9,10 +9,11 @@ class Skype
     class ExceptionFactory
       # This function will raise an exception. It never returns.
       #
-      # error_message should be the ERROR #error_id response from Skype.
+      # @param [String] error_message The ERROR #error_id response from Skype.
       def self.generate_exception(error_message)
-        error_code = error_message.sub(/^ERROR\s+/, '').to_i
-        exception_message = ERROR_MESSAGES[error_code] || "Unknown error: #{error_code}"
+        data = error_message.match(/^ERROR\s+(\d+)(?:\s+(.+))?$/)
+        error_code = data[1].to_i
+        exception_message = ERROR_MESSAGES[error_code] || data[2] || "Unknown error: #{error_code}"
 
         raise ::Skype::Errors::GeneralError.new(error_code), exception_message, caller
       end

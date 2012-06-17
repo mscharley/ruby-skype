@@ -103,7 +103,7 @@ class Skype
   end
 
   def user_status=(value)
-    @skype.send("SET USERSTATUS " + DataMaps::USER_VISIBILITY[value])
+    send_message("SET USERSTATUS " + DataMaps::USER_VISIBILITY[value])
     nil
   end
 
@@ -126,5 +126,19 @@ class Skype
   # The protocol version in use for the connection with Skype. This value is only reliable once connected.
   def protocol_version
     @skype.protocol_version
+  end
+
+  private
+
+  # Handles sending messages and handling possible errors returned by Skype
+  #
+  # @param [String] message The message to send to Skype
+  # @return [String] The reply from Skype or throws an exception on an error
+  def send_message(message)
+    ret = @skype.send(message)
+    if ret[0,6] == "ERROR "
+      Errors::ExceptionFactory.generate_exception(ret)
+    end
+    ret
   end
 end
