@@ -30,6 +30,14 @@ class Skype
         raise "#connect must be implemented"
       end
 
+      # Update processing. This is where you get a chance to check for input.
+      #
+      # Should be implemented by Protocol implementers, but no error is thrown if not.
+      #
+      # @return [void]
+      def tick
+      end
+
       private
 
       # Internal method to implement Observable.

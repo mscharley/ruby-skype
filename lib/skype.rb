@@ -27,6 +27,25 @@ class Skype
     @skype.connected?
   end
 
+  def tick
+    @skype.tick
+  end
+
+  def run
+    until @finished
+      tick
+      sleep(0.1)
+    end
+  end
+
+  def quit
+    @finished = true
+  end
+
+  def send_raw_command(command)
+    @skype.send(command)
+  end
+
   # The protocol version in use for the connection with Skype. This value is only reliable once connected.
   def protocol_version
     @skype.protocol_version
