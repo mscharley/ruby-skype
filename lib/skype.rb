@@ -113,7 +113,6 @@ class Skype
   #  * `:not_available`
   #  * `:do_not_disturb`
   #  * `:invisible`
-  #  * `:logged_out`
   #
   # @return [Symbol]
   # @api skype
@@ -146,7 +145,7 @@ class Skype
       when "CONNSTATUS"
         @connection_status = args.downcase.to_sym
       when "USERSTATUS"
-        @user_status
+        @user_status = DataMaps::USER_VISIBILITY.invert[args]
       else
     end
     puts "<= #{command} #{args}" if ::Skype.DEBUG
