@@ -58,11 +58,34 @@ class Skype
     @skype.send(command)
   end
 
-  # Public callback for receiving commands from Skype. Should not be called manually.
+  #######################
+  ###                 ###
+  ### BEGIN SKYPE API ###
+  ###                 ###
+  #######################
+
+  # Network connection status.
   #
+  # Valid values:
+  #
+  #  * `:offline`
+  #  * `:connecting`
+  #  * `:pausing`
+  #  * `:online`
+  attr_reader :connection_status
+
+  # Public callback for receiving updates from Skype. Should not be called manually.
+  #
+  # @param [String] command The command string to process.
   # @return [void]
   def received_command(command)
-    puts "<- #{command}"
+    (command, args) = command.split(/\s+/, 2)
+    case command
+      when "CONNSTATUS"
+        @connection_status = args.downcase.to_sym
+      else
+        puts "<- #{command} #{args}"
+    end
   end
 
   # The protocol version in use for the connection with Skype. This value is only reliable once connected.
