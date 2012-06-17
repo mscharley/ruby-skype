@@ -1,4 +1,6 @@
 
+require 'skype/errors/exception_factory'
+
 # This class is the main interface between Ruby and Skype.
 
 class Skype
@@ -20,6 +22,7 @@ class Skype
     @skype.connect
   end
 
+  # Are we connected to Skype?
   def connected?
     @skype.connected?
   end

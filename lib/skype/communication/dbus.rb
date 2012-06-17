@@ -31,7 +31,7 @@ class Skype
       def connect
         value = @skype.Invoke("NAME " + @application_name)
         unless value == %w{OK}
-          raise "There was an error connecting: #{value}"
+          Skype::Errors::ExceptionFactory.generate_exception *value
         end
         @protocol_version = @skype.Invoke("PROTOCOL 8")[0].sub(/^PROTOCOL\s+/, '').to_i
         @connected = true
