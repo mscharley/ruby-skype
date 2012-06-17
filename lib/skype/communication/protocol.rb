@@ -24,6 +24,8 @@ class Skype
       # Connects to Skype.
       #
       # Must be implemented by Protocol implementers.
+      #
+      # @return [void]
       def connect
         raise "#connect must be implemented"
       end
