@@ -10,6 +10,21 @@ this library will initially only be supported on Linux/DBus.
 If you want to use this or help out, please feel free to clone/fork and play
 with this, but it is prone to break or change at any time.
 
+Installation
+------------
+
+For now, you will need to install from the git repository. Simply clone it
+to wherever you like and then add it to your include path if needed.
+
+Documentation
+-------------
+
+There is some documentation about the Skype API itself in the doc folder. The
+ruby-skype API documentation is not available online currently, however we
+use YARD and have a .yardopts file in the repo for easy generation. Simply
+clone the library, then run `yard` in the repo root. The API documentation
+will be available in `/doc/api` when complete.
+
 License
 -------
 
