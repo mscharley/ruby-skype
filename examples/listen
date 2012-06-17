@@ -6,6 +6,7 @@
 $:.push('lib')
 
 require 'skype'
+Skype.DEBUG = true
 skype = Skype.new('ruby-skype-listen-in')
 skype.connect
 puts "Connected using protocol version #{skype.protocol_version}"
