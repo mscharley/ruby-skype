@@ -7,8 +7,8 @@ require 'skype/data_maps/user_visibility'
 class Skype
   # Initialises the Skype library and sets up a communication protocol, but doesn't connect yet.
   #
-  # application_name is for DBus's sake. It seems that on Windows/OSX Skype can get an application name for display to
-  # the user, but on DBus it expects one to be fed to it.
+  # @param [String] application_name Name to use when identifying to Skype. Not all platforms use this value as Skype
+  #     will automatically assign a name.
   def initialize(application_name, communication_protocol = nil)
     if communication_protocol.nil?
       require 'skype/communication/dbus'
@@ -22,20 +22,27 @@ class Skype
 
   # Controls whether the library should output extra debugging information or not.
   # Currently controls whether we should output all network throughput.
+  #
+  # @return [Boolean]
   def self.DEBUG
     @debug_mode
   end
 
+  # (see DEBUG)
   def self.DEBUG=(value)
     @debug_mode = value
   end
 
-  # Connect to Skype and negotiate a communication channel
+  # Connect to Skype and negotiate a communication channel.
+  #
+  # @return [void]
   def connect
     @skype.connect
   end
 
   # Are we connected to Skype?
+  #
+  # @return [Boolean]
   def connected?
     @skype.connected?
   end
@@ -65,8 +72,13 @@ class Skype
     @finished = true
   end
 
+  # Sends a raw command to Skype
+  #
+  # @param [String] command The command to send
+  # @return [String] The value returned by Skype
+  # @api private
   def send_raw_command(command)
-    @skype.send(command)
+    send_message(command)
   end
 
   #######################
@@ -83,8 +95,12 @@ class Skype
   #  * `:connecting`
   #  * `:pausing`
   #  * `:online`
+  #
+  # @return [Symbol]
+  # @api skype
   attr_reader :connection_status
 
+  # @!attribute [rw] user_status
   # User visibility for the current user.
   #
   # Valid values:
@@ -98,10 +114,14 @@ class Skype
   #  * `:do_not_disturb`
   #  * `:invisible`
   #  * `:logged_out`
+  #
+  # @return [Symbol]
+  # @api skype
   def user_status
     @user_status
   end
 
+  # (see #user_status)
   def user_status=(value)
     send_message("SET USERSTATUS " + DataMaps::USER_VISIBILITY[value])
     nil
@@ -111,6 +131,7 @@ class Skype
   #
   # @param [String] command The command string to process.
   # @return [void]
+  # @api private
   def received_command(command)
     (command, args) = command.split(/\s+/, 2)
     case command
@@ -124,6 +145,8 @@ class Skype
   end
 
   # The protocol version in use for the connection with Skype. This value is only reliable once connected.
+  #
+  # @return [Integer] The version number of the protocol in use.
   def protocol_version
     @skype.protocol_version
   end

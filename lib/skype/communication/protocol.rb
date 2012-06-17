@@ -2,7 +2,8 @@
 require 'observer'
 
 class Skype
-  # This module is entirely for organisation purposes. Do not attempt to include this.
+  # You shouldn't try including this module, it is used purely for organisation.
+  # @private
   module Communication
     # Interface for the Skype::Communication::* classes. This provides basic input and output functionality with Skype.
     #

@@ -1,6 +1,7 @@
 
 class Skype
   module DataMaps
+    # Data mapping between user visibilities as returned by Skype and the symbols that this API cares about.
     USER_VISIBILITY = {
         :unknown => 'UNKNOWN',
         :online => 'ONLINE',
