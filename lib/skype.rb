@@ -29,17 +29,27 @@ class Skype
     @skype.connected?
   end
 
+  # Execute a single run of the Skype event loop
+  #
+  # @return [void]
   def tick
     @skype.tick
   end
 
+  # Executes the Skype event loops. Doesn't return unless #quit is called.
+  #
+  # @return [void]
   def run
+    @finished = false
     until @finished
       tick
       sleep(0.1)
     end
   end
 
+  # Stops the Skype event loop from running.
+  #
+  # @return [void]
   def quit
     @finished = true
   end
@@ -48,6 +58,9 @@ class Skype
     @skype.send(command)
   end
 
+  # Public callback for receiving commands from Skype. Should not be called manually.
+  #
+  # @return [void]
   def received_command(command)
     puts "<- #{command}"
   end
