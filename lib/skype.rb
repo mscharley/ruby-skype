@@ -1,5 +1,6 @@
 
 require 'skype/errors/exception_factory'
+require 'skype/data_maps/user_visibility'
 
 # This class is the main interface between Ruby and Skype.
 
@@ -74,6 +75,28 @@ class Skype
   #  * `:online`
   attr_reader :connection_status
 
+  # User visibility for the current user.
+  #
+  # Valid values:
+  #
+  #  * `:unknown`
+  #  * `:online`
+  #  * `:offline`
+  #  * `:skype_me`
+  #  * `:away`
+  #  * `:not_available`
+  #  * `:do_not_disturb`
+  #  * `:invisible`
+  #  * `:logged_out`
+  def user_status
+    @user_status
+  end
+
+  def user_status=(value)
+    @skype.send("SET USERSTATUS " + DataMaps::USER_VISIBILITY[value])
+    nil
+  end
+
   # Public callback for receiving updates from Skype. Should not be called manually.
   #
   # @param [String] command The command string to process.
@@ -83,9 +106,12 @@ class Skype
     case command
       when "CONNSTATUS"
         @connection_status = args.downcase.to_sym
+      when "USERSTATUS"
+        @user_status
       else
         puts "<- #{command} #{args}"
     end
+    puts "<- #{command} #{args}"
   end
 
   # The protocol version in use for the connection with Skype. This value is only reliable once connected.
