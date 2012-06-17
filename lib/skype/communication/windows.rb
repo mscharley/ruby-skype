@@ -1,5 +1,5 @@
 
-require 'Win32API'
+require 'dl/import'
 require 'skype/communication/protocol'
 
 class Skype
@@ -11,38 +11,22 @@ class Skype
       include Skype::Communication::Protocol
 
       def initialize
-        # Setup Win32 API calls
-        @send_message = Win32API.new("user32", "SendMessage", %w{L L L L}, 'L')
-        @register_window_message = Win32API.new("user32", "RegisterWindowMessage", %w{P}, 'I')
-
         # Get the message id's for the Skype Control messages
-        @api_discover_message_id = register_window_message('SkypeControlAPIDiscover')
-        @api_attach_message_id = register_window_message('SkypeControlAPIAttach')
+        @api_discover_message_id = Win32::RegisterWindowMessage('SkypeControlAPIDiscover')
+        @api_attach_message_id = Win32::RegisterWindowMessage('SkypeControlAPIAttach')
+
+        puts "#{@api_discover_message_id} #{@api_attach_message_id}"
       end
 
-      private
+      module Win32
+        extend DL::Importer
+        dlload 'user32'
 
-      # Ruby handle to the Win32API function SendMessage.
-      #
-      # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644950.aspx
-      # @api win32
-      # @param [Integer] window_handle
-      # @param [Integer] message_id
-      # @param [Integer] wParam
-      # @param [Integer] lParam
-      # @return [Integer]
-      def send_message(window_handle, message_id, wParam, lParam)
-        @send_message.Call(window_handle, message_id, wParam, lParam)
-      end
+        typealias('HWND', 'void *')
+        typealias('LPCTSTR', 'unsigned char *')
+        typealias('UINT', 'unsigned int')
 
-      # Ruby handle to the Win32API function RegisterWindowMessage.
-      #
-      # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644947.aspx
-      # @api win32
-      # @param [String] message_name
-      # @return [Integer]
-      def register_window_message(message_name)
-        @register_window_message.Call(message_name)
+        extern 'UINT RegisterWindowMessage(LPCTSTR)'
       end
     end
   end
