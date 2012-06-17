@@ -33,11 +33,17 @@ class Skype
     @debug_mode = value
   end
 
-  # Connect to Skype and negotiate a communication channel.
+  # Connect to Skype and negotiate a communication channel. Blocks till the connection is fully established.
   #
-  # @return [void]
+  # @return [Symbol] Initial value for user_status.
   def connect
     @skype.connect
+
+    until @user_status
+      tick
+      sleep(0.1)
+    end
+    @user_status
   end
 
   # Are we connected to Skype?
