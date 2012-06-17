@@ -127,11 +127,19 @@ class Skype
     nil
   end
 
-  # Public callback for receiving updates from Skype. Should not be called manually.
+  # The protocol version in use for the connection with Skype. This value is only reliable once connected.
+  #
+  # @return [Integer] The version number of the protocol in use.
+  def protocol_version
+    @skype.protocol_version
+  end
+
+  protected
+
+  # Callback for receiving updates from Skype.
   #
   # @param [String] command The command string to process.
   # @return [void]
-  # @api private
   def received_command(command)
     (command, args) = command.split(/\s+/, 2)
     case command
@@ -142,13 +150,6 @@ class Skype
       else
     end
     puts "<= #{command} #{args}" if ::Skype.DEBUG
-  end
-
-  # The protocol version in use for the connection with Skype. This value is only reliable once connected.
-  #
-  # @return [Integer] The version number of the protocol in use.
-  def protocol_version
-    @skype.protocol_version
   end
 
   private
