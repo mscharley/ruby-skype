@@ -14,4 +14,18 @@ class Skype
       @skype = communication_protocol
     end
   end
+
+  # Connect to Skype and negotiate a communication channel
+  def connect
+    @skype.connect
+  end
+
+  def connected?
+    @skype.connected?
+  end
+
+  # The protocol version in use for the connection with Skype. This value is only reliable once connected.
+  def protocol_version
+    @skype.protocol_version
+  end
 end

@@ -15,6 +15,10 @@ class Skype
       SKYPE_SERVER_INTERFACE = 'com.Skype.API'
       SKYPE_CLIENT_PATH = '/com/Skype/Client'
 
+      def connected?
+        @connected
+      end
+
       def initialize(application_name)
         @application_name = application_name
         @dbus = ::DBus::SessionBus.instance
@@ -24,7 +28,19 @@ class Skype
         @skype.default_iface = SKYPE_SERVER_INTERFACE
       end
 
+      def connect
+        value = @skype.Invoke("NAME " + @application_name)
+        unless value == %w{OK}
+          raise "There was an error connecting: #{value}"
+        end
+        @protocol_version = @skype.Invoke("PROTOCOL 8")[0].sub(/^PROTOCOL\s+/, '').to_i
+        @connected = true
+      end
+
       def send(message)
+        unless @connected
+          raise "You must be connected before sending data."
+        end
         @skype.Invoke(message)
       end
     end

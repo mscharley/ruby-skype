@@ -10,11 +10,20 @@ class Skype
     module Protocol
       include Observable
 
+      attr_reader :protocol_version
+
       # Sends a message to Skype.
       #
       # Must be implemented by Protocol implementers.
       def send(message)
-        raise "send(message) must be implemented."
+        raise "#send(message) must be implemented."
+      end
+
+      # Connects to Skype.
+      #
+      # Must be implemented by Protocol implementers.
+      def connect
+        raise "#connect must be implemented"
       end
 
       private
