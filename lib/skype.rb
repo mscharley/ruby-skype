@@ -20,6 +20,16 @@ class Skype
     @skype.add_observer(self, :received_command)
   end
 
+  # Controls whether the library should output extra debugging information or not.
+  # Currently controls whether we should output all network throughput.
+  def self.DEBUG
+    @debug_mode
+  end
+
+  def self.DEBUG=(value)
+    @debug_mode = value
+  end
+
   # Connect to Skype and negotiate a communication channel
   def connect
     @skype.connect
@@ -109,9 +119,8 @@ class Skype
       when "USERSTATUS"
         @user_status
       else
-        puts "<- #{command} #{args}"
     end
-    puts "<- #{command} #{args}"
+    puts "<= #{command} #{args}" if ::Skype.DEBUG
   end
 
   # The protocol version in use for the connection with Skype. This value is only reliable once connected.

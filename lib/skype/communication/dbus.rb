@@ -61,7 +61,10 @@ class Skype
         unless @connected
           raise "You must be connected before sending data."
         end
-        @skype.Invoke(message)[0]
+        puts "-> #{message}" if ::Skype.DEBUG
+        ret = @skype.Invoke(message)[0]
+        puts "<- #{ret}" if ::Skype.DEBUG
+        ret
       end
 
       # Poll DBus for incoming messages. We use this method for watching for our messages as it is simpler, and an
