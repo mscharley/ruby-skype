@@ -21,7 +21,7 @@ Windows Support
 
 Windows support has been attempted, but isn't functional. If you would like
 to help, then please look at the windows and windows-dl branches and see if
-you can get them running.
+you can get one of them running.
 
 Documentation
 -------------
