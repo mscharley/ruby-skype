@@ -8,5 +8,5 @@ skype.connect
 puts "Connected using protocol version #{skype.protocol_version}"
 
 puts "Attempting to call the echo service..."
-puts "<= " + skype.send_raw_command('CALL echo123')
+skype.send_raw_command('CALL echo123')
 skype.run
