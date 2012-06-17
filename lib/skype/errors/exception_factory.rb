@@ -1,6 +1,6 @@
 
 require 'skype/errors/error_messages'
-require 'skype/errors/general_exception'
+require 'skype/errors/general_error'
 
 class Skype
   # This module is entirely for organisation purposes. Do not attempt to include it.
@@ -14,7 +14,7 @@ class Skype
         error_code = error_message.sub(/^ERROR\s+/, '').to_i
         exception_message = ERROR_MESSAGES[error_code] || "Unknown error: #{error_code}"
 
-        raise ::Skype::Errors::GeneralException.new(error_code), exception_message, caller
+        raise ::Skype::Errors::GeneralError.new(error_code), exception_message, caller
       end
     end
   end
