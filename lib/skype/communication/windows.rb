@@ -1,5 +1,6 @@
 
 require 'dl/import'
+require 'dl/types'
 require 'skype/communication/protocol'
 
 class Skype
@@ -23,16 +24,11 @@ class Skype
       module Win32
         extend DL::Importer
         dlload 'user32'
+        include DL::Win32Types
 
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/aa383751.aspx
-        typealias('HWND', 'int')
-        typealias('HANDLE', 'int') # Handles are actually void*, but don't point to anything. The pointer is semantic.
         typealias('HMENU', 'HANDLE')
-        typealias('HINSTANCE', 'HANDLE')
-        typealias('LPVOID', 'void *')
-        typealias('DWORD', 'unsigned long')
         typealias('LPCTSTR', 'unsigned char *')
-        typealias('UINT', 'unsigned int')
 
         # Window handle to broadcast to all windows
         HWND_BROADCAST = 0xffff
