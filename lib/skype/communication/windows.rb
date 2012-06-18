@@ -29,21 +29,19 @@ class Skype
         @window_class_struct.cbClsExtra    = 0
         @window_class_struct.cbWndExtra    = 0
         @window_class_struct.hInstance     = hInstance
-        @window_class_struct.hIcon         = 0
-        @window_class_struct.hCursor       = 0
+        @window_class_struct.hIcon         = DL::NULL
+        @window_class_struct.hCursor       = DL::NULL
         @window_class_struct.hbrBackground = Win32::User32::COLOR_WINDOWFRAME
         @window_class_struct.lpszMenuName  = DL::NULL
         @window_class_struct.lpszClassName = 'ruby-skype'
-        @window_class_struct.hIconSm       = 0
-
-        p @window_class_struct
+        @window_class_struct.hIconSm       = DL::NULL
 
         @window_class = Win32::User32::RegisterClassEx(@window_class_struct.to_i)
         puts "Window Class: #{@window_class}"
 
         puts "Entering CreateWindowEx"
         @window = Win32::User32::CreateWindowEx(0, 'ruby-skype', 'ruby-skype', Win32::User32::WS_OVERLAPPEDWINDOW,
-                                        0, 0, 200, 200, DL::NULL, DL::NULL, DL::NULL)
+                                                0, 0, 0, 0, DL::NULL, DL::NULL, DL::NULL)
         puts "Exited CreateWindowEx"
 
         p @window
