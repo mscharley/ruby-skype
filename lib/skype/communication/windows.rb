@@ -35,7 +35,7 @@ class Skype
       #
       # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms633573.aspx MSDN
       def message_pump(window_handle, message_id, wParam, lParam)
-        puts "WM: #{message_id}" if Skype.DEBUG
+        puts "WM: #{sprintf("0x%04x", message_id)}" if Skype.DEBUG
         Win32::DefWindowProc(window_handle, message_id, wParam, lParam)
       end
     end
