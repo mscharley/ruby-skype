@@ -16,12 +16,13 @@ Installation
 For now, you will need to install from the git repository. Simply clone it
 to wherever you like and then add it to your include path if needed.
 
-Windows Support
----------------
+Mac OS X Support
+----------------
 
-Windows support has been attempted, but isn't functional. If you would like
-to help, then please look at the windows and windows-dl branches and see if
-you can get one of them running.
+OS X integration should be possible, however I don't have a Mac to
+test/develop with. If you want to help out, then look at the 
+`Skype::Communication::*` classes. `Skype::Communication::Protocol` is the
+base interface you need to implement. Any help would be greatly appreciated!
 
 Documentation
 -------------
