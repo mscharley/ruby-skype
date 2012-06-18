@@ -16,19 +16,81 @@ class Skype
         @api_discover_message_id = Win32::RegisterWindowMessage('SkypeControlAPIDiscover')
         @api_attach_message_id = Win32::RegisterWindowMessage('SkypeControlAPIAttach')
 
-        @window = Win32::CreateWindowEx(0, DL::NULL, DL::NULL, Win32::WS_OVERLAPPEDWINDOW, 0, 0, 200, 200, 0, DL::NULL, DL::NULL)
+        puts "wndproc: #{Win32::WNDPROC}"
 
-        puts "#{@window}"
+        puts "Entering RegisterClassEx"
+
+        @window_class_struct = Win32::WNDCLASSEX.malloc
+        @window_class_struct.cbSize        = Win32::WNDCLASSEX.size
+        @window_class_struct.style         = Win32::CS_HREDRAW | Win32::CS_VREDRAW
+        @window_class_struct.lpfnWndProc   = Win32::WNDPROC
+        @window_class_struct.cbClsExtra    = 0
+        @window_class_struct.cbWndExtra    = 0
+        @window_class_struct.hInstance     = 0
+        @window_class_struct.hIcon         = 0
+        @window_class_struct.hCursor       = 0
+        @window_class_struct.hbrBackground = Win32::COLOR_WINDOWFRAME
+        @window_class_struct.lpszMenuName  = DL::NULL
+        @window_class_struct.lpszClassName = 'ruby-skype'
+        @window_class_struct.hIconSm       = 0
+
+        p @window_class_struct
+
+        @window_class = Win32::RegisterClassEx(@window_class_struct.to_i)
+        puts "Window Class: #{@window_class}"
+
+        puts "Entering CreateWindowEx"
+        @window = Win32::CreateWindowEx(0, 'ruby-skype', 'ruby-skype', Win32::WS_OVERLAPPEDWINDOW,
+                                        0, 0, 200, 200, DL::NULL, DL::NULL, DL::NULL)
+        puts "Exited CreateWindowEx"
+
+        p @window
+      end
+
+      # LRESULT CALLBACK WindowProc(
+      #   __in  HWND hwnd,
+      #   __in  UINT uMsg,
+      #   __in  WPARAM wParam,
+      #   __in  LPARAM lParam
+      # );
+      def message_pump(window_handle, message_id, wParam, lParam)
+        puts "WM: #{message_id}"
       end
 
       module Win32
+        extend DL
         extend DL::Importer
         dlload 'user32'
         include DL::Win32Types
 
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/aa383751.aspx
+        typealias('HBRUSH', 'HANDLE')
+        typealias('HCURSOR', 'HANDLE')
+        typealias('HICON', 'HANDLE')
         typealias('HMENU', 'HANDLE')
         typealias('LPCTSTR', 'unsigned char *')
+        typealias('LPVOID', 'void *')
+        typealias('WNDPROC', 'void *') # Actually a function pointer
+        typealias('WNDCLASSEX', 'void *') # struct
+
+        WNDCLASSEX = struct [
+          'UINT      cbSize',
+          'UINT      style',
+          'WNDPROC   lpfnWndProc',
+          'int       cbClsExtra',
+          'int       cbWndExtra',
+          'HINSTANCE hInstance',
+          'HICON     hIcon',
+          'HCURSOR   hCursor',
+          'HBRUSH    hbrBackground',
+          'LPCTSTR   lpszMenuName',
+          'LPCTSTR   lpszClassName',
+          'HICON     hIconSm',
+        ]
+
+        WNDPROC = set_callback DL::TYPE_LONG, 4 do |window_handle, message_id, wParam, lParam|
+          puts "WM: #{message_id}"
+        end
 
         # Window handle to broadcast to all windows
         HWND_BROADCAST = 0xffff
@@ -36,6 +98,13 @@ class Skype
 
         # CreateWindow Use Default Value
         CW_USEDEFAULT = 0x80000000
+
+        # Class Style contants.
+        CS_VREDRAW = 0x0001
+        CS_HREDRAW = 0x0002
+
+        COLOR_WINDOW = 5
+        COLOR_WINDOWFRAME = 6
 
         # Window Style constants. This is only a subset.
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms632600.aspx
@@ -55,6 +124,7 @@ class Skype
 
         extern 'UINT RegisterWindowMessage(LPCTSTR)'
         extern 'HWND CreateWindowEx(DWORD, LPCTSTR, LPCTSTR, DWORD, int, int, int, int, HWND, HMENU, HINSTANCE)'
+        extern 'ATOM RegisterClassEx(WNDCLASSEX)'
       end
     end
   end
