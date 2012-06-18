@@ -179,6 +179,15 @@ class Skype
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644943.aspx MSDN
         _func(:PeekMessage, :PeekMessageA, [LPMSG, HWND, UINT, UINT, UINT], BOOL)
 
+        # @!method SendMessage(window, message, wParam, lParam)
+        #
+        # Send a message to another window.
+        #
+        # @param [WindowHandle] window Which window to send the message to.
+        # @param [Integer] message WM_* message to send.
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644950.aspx MSDN
+        _func(:SendMessage, :SendMessageA, [HWND, UINT, WPARAM, LPARAM], LRESULT)
+
         # @!method TranslateMessage(message, window, filter_min, filter_max)
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644955.aspx MSDN
         _func(:TranslateMessage, [LPVOID], BOOL)
