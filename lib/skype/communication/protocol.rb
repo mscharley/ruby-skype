@@ -17,6 +17,14 @@ class Skype
       # @return [Boolean]
       attr_reader :protocol_version
 
+      # @!attribute [r] connected?
+      # Have we connected to Skype yet?
+      #
+      # @return [Boolean]
+      def connected?
+        @connected
+      end
+
       # Sends a message to Skype.
       #
       # Must be implemented by Protocol implementers.
