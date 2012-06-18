@@ -1,7 +1,6 @@
 
 require 'dbus'
 require 'skype/communication/protocol'
-require 'observer'
 
 class Skype
   module Communication
