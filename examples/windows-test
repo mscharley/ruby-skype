@@ -8,7 +8,7 @@ $:.push('lib')
 require 'skype'
 require 'skype/communication/windows'
 Skype.DEBUG = true
-comm = Skype::Communication::Windows.new
+comm = Skype::Communication::Windows.new('ruby-skype-listen-in')
 skype = Skype.new('ruby-skype-listen-in', comm)
 skype.connect
 puts "Connected using protocol version #{skype.protocol_version}"

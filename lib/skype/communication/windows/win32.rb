@@ -225,6 +225,10 @@ class Skype
         CS_VREDRAW = 0x0001
         CS_HREDRAW = 0x0002
 
+        # @!group Window Message constants
+
+        WM_COPYDATA = 0x004A
+
         # @!group PeekMessage constants
 
         # Messages are not removed from the queue after processing by #PeekMessage().
