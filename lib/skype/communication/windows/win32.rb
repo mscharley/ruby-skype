@@ -52,8 +52,11 @@ class Skype
         ATOM = BYTE
         NULL = 0
 
+        # This is the callback function used to process window messages.
         WNDPROC = callback(:WindowProc, [HWND, UINT, WPARAM, LPARAM], LRESULT)
 
+        # @todo Document this better
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms633577.aspx MSDN
         class WNDCLASSEX < FFI::Struct
           layout :cbSize, UINT,
                  :style, UINT,
@@ -97,9 +100,51 @@ class Skype
                  :pt, POINT
         end
 
+        # @!method RegisterWindowMessage(message_name)
+        #
+        # Registers a Window Message with Windows or returns a handle to an existing message.
+        #
+        # @param [String] message_name The name of the message to register
+        # @return [Handle]
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644947.aspx MSDN
         _func(:RegisterWindowMessage, :RegisterWindowMessageA, [LPCTSTR], UINT)
+
+        # @!method GetModuleHandle(module_name)
+        #
+        # Used to obtain a handle to a module loaded by the application. If passed DL::NULL then returns a
+        # handle to the current module.
+        #
+        # @param [String|DL::NULL] module_name The name of the module to return a handle to.
+        # @return [ModuleHandle]
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms683199.aspx MSDN
         _func(:GetModuleHandle, :GetModuleHandleA, [LPCTSTR], HMODULE)
+
+        # @!method RegisterClassEx(class_definition)
+        #
+        # Registers a Window Class for use with CreateWindowEx.
+        #
+        # @param [WindowClass] class_definition
+        # @return [Handle]
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms633587.aspx MSDN
         _func(:RegisterClassEx, :RegisterClassExA, [LPVOID], ATOM)
+
+        # @!method CreateWindowEx(extended_style, window_class, window_name, style, x, y, width, height, parent, menu, instance)
+        #
+        # Creates a new window.
+        #
+        # @param [Integer] extended_style A combination of WS_EX_* constant values defining the extended style for this window.
+        # @param [String] window_class This matches up with a registered WindowClass's lpszClassName parameter.
+        # @param [String] window_name This is the title of the newly created window.
+        # @param [Integer] style A combination of the WS_* constant values defining the style for this window.
+        # @param [Integer] x The horizontal position of the window on the screen.
+        # @param [Integer] y The vertical position of the window on the screen.
+        # @param [Integer] width The width of the window to create.
+        # @param [Integer] height The height of the window to create.
+        # @param [WindowHandle] parent A parent window for this one.
+        # @param [MenuHandle] menu The menu for this window.
+        # @param [InstanceHandle] instance
+        # @return [WindowHandle]
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms632680.aspx MSDN
         _func(:CreateWindowEx, :CreateWindowExA, [DWORD, LPCTSTR, LPCTSTR, DWORD, INT, INT, INT, INT, HWND, HMENU, HINSTANCE, LPVOID], HWND)
         _func(:GetMessage, :GetMessageA, [LPMSG, HWND, UINT, UINT], BOOL)
         _func(:TranslateMessage, [LPVOID], BOOL)

@@ -29,12 +29,6 @@ class Skype
                                         0, 0, 0, 0, Win32::NULL, Win32::NULL, hInstance, nil)
       end
 
-      # LRESULT CALLBACK WindowProc(
-      #   __in  HWND hwnd,
-      #   __in  UINT uMsg,
-      #   __in  WPARAM wParam,
-      #   __in  LPARAM lParam
-      # );
       def message_pump(window_handle, message_id, wParam, lParam)
         puts "WM: #{message_id}" if Skype.DEBUG
         Win32::DefWindowProc(window_handle, message_id, wParam, lParam)
