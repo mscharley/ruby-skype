@@ -5,6 +5,8 @@ class Skype
   module Communication
     class Windows
       module Win32
+        # This module simply includes a bunch of Win32 type aliases for the DL library
+        # @api private
         module Types
           def included(m)
             m.module_eval {

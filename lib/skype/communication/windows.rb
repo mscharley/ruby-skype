@@ -10,6 +10,7 @@ class Skype
     class Windows
       include Skype::Communication::Protocol
 
+      # @see http://msdn.microsoft.com/en-us/library/bb384843.aspx
       def initialize
         # Get the message id's for the Skype Control messages
         @api_discover_message_id = Win32::User32::RegisterWindowMessage('SkypeControlAPIDiscover')
@@ -22,8 +23,8 @@ class Skype
 
         puts "Entering RegisterClassEx"
 
-        @window_class_struct = Win32::User32::WNDCLASSEX.malloc
-        @window_class_struct.cbSize        = Win32::User32::WNDCLASSEX.size
+        @window_class_struct = Win32::User32::WindowClass.malloc
+        @window_class_struct.cbSize        = Win32::User32::WindowClass.size
         @window_class_struct.style         = Win32::User32::CS_HREDRAW | Win32::User32::CS_VREDRAW
         @window_class_struct.lpfnWndProc   = Win32::User32::WNDPROC
         @window_class_struct.cbClsExtra    = 0
