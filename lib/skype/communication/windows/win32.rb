@@ -1,5 +1,5 @@
 
-require 'skype/communication/windows/win32/types'
+require 'dl/import'
 require 'skype/communication/windows/win32/user32'
 require 'skype/communication/windows/win32/kernel32'
 

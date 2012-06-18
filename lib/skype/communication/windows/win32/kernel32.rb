@@ -1,4 +1,6 @@
 
+require 'skype/communication/windows/win32/types'
+
 class Skype
   module Communication
     class Windows

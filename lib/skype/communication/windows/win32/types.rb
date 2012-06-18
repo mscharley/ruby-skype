@@ -1,4 +1,6 @@
 
+require 'dl/types'
+
 class Skype
   module Communication
     class Windows

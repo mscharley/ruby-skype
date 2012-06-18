@@ -1,6 +1,4 @@
 
-require 'dl/import'
-require 'dl/types'
 require 'skype/communication/protocol'
 require 'skype/communication/windows/win32'
 
