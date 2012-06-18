@@ -167,6 +167,18 @@ class Skype
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644936.aspx MSDN
         _func(:GetMessage, :GetMessageA, [LPMSG, HWND, UINT, UINT], BOOL)
 
+        # @!method PeekMessage(message, window, filter_min, filter_max, remove_message)
+        #
+        # @param [MSG] message **[out]** A message structure to output the incoming message to.
+        # @param [WindowHandle] window Which window to get messages for.
+        # @param [Integer] filter_min The first message to return, numerically. For suggestions, see MSDN.
+        # @param [Integer] filter_max The last message to return, numerically. If min and max are both 0 then all
+        #                             messages are returned. For suggestions, see MSDN.
+        # @param [Integer] remove_message One of the PM_* values.
+        # @return [Integer] 0 or 1 indicating whether to keep processing.
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644943.aspx MSDN
+        _func(:PeekMessage, :PeekMessageA, [LPMSG, HWND, UINT, UINT, UINT], BOOL)
+
         # @!method TranslateMessage(message, window, filter_min, filter_max)
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644955.aspx MSDN
         _func(:TranslateMessage, [LPVOID], BOOL)
@@ -201,6 +213,13 @@ class Skype
 
         CS_VREDRAW = 0x0001
         CS_HREDRAW = 0x0002
+
+        # @!group PeekMessage constants
+
+        # Messages are not removed from the queue after processing by #PeekMessage().
+        PM_NOREMOVE = 0
+        # Messages are removed from the queue after processing by #PeekMessage().
+        PM_REMOVE   = 1
 
         # @!group Window Style constants
         #
