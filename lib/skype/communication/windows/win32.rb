@@ -156,7 +156,7 @@ class Skype
 
         # @!method GetMessage(message, window, filter_min, filter_max)
         #
-        # Get a message from the message queue. Blocks until there is one to return. See PeekMessage().
+        # Get a message from the message queue. Blocks until there is one to return. Compare with PeekMessage().
         #
         # @param [MSG] message **[out]** A message structure to output the incoming message to.
         # @param [WindowHandle] window Which window to get messages for.
@@ -168,6 +168,8 @@ class Skype
         _func(:GetMessage, :GetMessageA, [LPMSG, HWND, UINT, UINT], BOOL)
 
         # @!method PeekMessage(message, window, filter_min, filter_max, remove_message)
+        #
+        # Peek at a message from the message queue and optionally remove it. Never blocks. Compare with GetMessage().
         #
         # @param [MSG] message **[out]** A message structure to output the incoming message to.
         # @param [WindowHandle] window Which window to get messages for.
