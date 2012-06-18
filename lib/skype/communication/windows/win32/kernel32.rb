@@ -21,6 +21,17 @@ class Skype
           # @return [ModuleHandle]
           # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms683199.aspx MSDN
           extern 'HMODULE GetModuleHandle(LPCTSTR)'
+
+          # @!method GetLastError()
+          # @return [Win32ErrorCode]
+          # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms679360.aspx
+          extern 'DWORD GetLastError()'
+
+          # @!method SetLastError(error_code)
+          # @param [Win32ErrorCode] error_code
+          # @return [void]
+          # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms680627.aspx
+          extern 'void SetLastError(DWORD)'
         end
       end
     end
