@@ -1,5 +1,11 @@
 #!/usr/bin/env ruby
 
+# Borrowed from the below link verbatim. I can't read Japanese, so I'm not sure who or what to attribute this to, but I
+# think I got it right below.
+
+# Originally written by: ﾒﾝｿｰﾚﾀﾑ
+# http://www19.atwiki.jp/tmtbnc/m/pages/56.html?guid=on
+
 require 'ffi'
 
 module HelloFFI

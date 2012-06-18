@@ -50,12 +50,13 @@ class Skype
         LPCTSTR = LPMSG = LPVOID
         LRESULT = LONG_PTR
         ATOM = BYTE
+
+        # Provide a NULL constant so we can be a little more explicit.
         NULL = 0
 
         # This is the callback function used to process window messages.
         WNDPROC = callback(:WindowProc, [HWND, UINT, WPARAM, LPARAM], LRESULT)
 
-        # @todo Document this better
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms633577.aspx MSDN
         class WNDCLASSEX < FFI::Struct
           layout :cbSize, UINT,
@@ -77,20 +78,26 @@ class Skype
             @atom = 0
           end
 
+          # Register class with Windows.
           def register_class_ex
             (@atom = Win32::RegisterClassEx(self)) != 0 ? @atom : raise("RegisterClassEx Error")
           end
 
-          def atom
+          # @!attribute [r] handle
+          #
+          # Returns a handle to use the windo class with CreateWindowEx()
+          def handle
             @atom != 0 ? @atom : register_class_ex
           end
         end # WNDCLASSEX
 
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/dd162805.aspx
         class POINT < FFI::Struct
           layout :x, LONG,
                  :y, LONG
         end
 
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644958.aspx
         class MSG < FFI::Struct
           layout :hwnd, HWND,
                  :message, UINT,
@@ -146,9 +153,31 @@ class Skype
         # @return [WindowHandle]
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms632680.aspx MSDN
         _func(:CreateWindowEx, :CreateWindowExA, [DWORD, LPCTSTR, LPCTSTR, DWORD, INT, INT, INT, INT, HWND, HMENU, HINSTANCE, LPVOID], HWND)
+
+        # @!method GetMessage(message, window, filter_min, filter_max)
+        #
+        # Get a message from the message queue. Blocks until there is one to return. See PeekMessage().
+        #
+        # @param [MSG] message **[out]** A message structure to output the incoming message to.
+        # @param [WindowHandle] window Which window to get messages for.
+        # @param [Integer] filter_min The first message to return, numerically. For suggestions, see MSDN.
+        # @param [Integer] filter_max The last message to return, numerically. If min and max are both 0 then all
+        #                             messages are returned. For suggestions, see MSDN.
+        # @return [Integer] -1 on error, otherwise 0 or 1 indicating whether to keep processing.
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644936.aspx MSDN
         _func(:GetMessage, :GetMessageA, [LPMSG, HWND, UINT, UINT], BOOL)
+
+        # @!method TranslateMessage(message, window, filter_min, filter_max)
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644955.aspx MSDN
         _func(:TranslateMessage, [LPVOID], BOOL)
+
+        # @!method DispatchMessage(message, window, filter_min, filter_max)
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644934.aspx MSDN
         _func(:DispatchMessage, :DispatchMessageA, [LPVOID], BOOL)
+
+        # @!method DefWindowProc(message, window, filter_min, filter_max)
+        # @return [Object] Return value is dependant on message type
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms633572.aspx MSDN
         _func(:DefWindowProc, :DefWindowProcA, [HWND, UINT, WPARAM, LPARAM], LRESULT)
 
         # @!group Predefined WindowHandle's
@@ -178,17 +207,29 @@ class Skype
         # This is only a subset.
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms632600.aspx
 
+        # The window has a thin-line border.
         WS_BORDER =      0x00800000
+        # The window has a title bar
         WS_CAPTION =     0x00C00000
+        # The window is initially disabled. A disabled window cannot receive input from the user.
         WS_DISABLED =    0x08000000
+        # The window is an overlapped window. An overlapped window has a title bar and a border.
         WS_OVERLAPPED =  0x00000000
+        # The windows is a pop-up window.
         WS_POPUP =       0x80000000
+        # The window has a sizing border.
         WS_SIZEBOX =     0x00040000
+        # The window has a window menu on its title bar.
         WS_SYSMENU =     0x00080000
+        # The window has a sizing border.
         WS_THICKFRAME =  0x00040000
+        # The window has a maximize button.
         WS_MAXIMIZEBOX = 0x00010000
+        # The window has a minimize button.
         WS_MINIMIZEBOX = 0x00020000
+        # The window is an overlapped window.
         WS_OVERLAPPEDWINDOW = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX
+        # The window is a pop-up window.
         WS_POPUPWINDOW = WS_POPUP | WS_BORDER | WS_SYSMENU
 
         # @!group Window Extended Style constants
@@ -196,6 +237,7 @@ class Skype
         # This is only a subset.
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ff700543.aspx
 
+        # The window has generic left-aligned properties. This is the default.
         WS_EX_LEFT = 0
 
         # @!endgroup

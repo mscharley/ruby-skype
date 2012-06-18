@@ -10,25 +10,30 @@ class Skype
     class Windows
       include Skype::Communication::Protocol
 
-      # @see http://msdn.microsoft.com/en-us/library/bb384843.aspx
+      # Sets up access to Skype
+      #
+      # @see http://msdn.microsoft.com/en-us/library/bb384843.aspx Creating Win32-Based Applications
       def initialize
         # Get the message id's for the Skype Control messages
         @api_discover_message_id = Win32::RegisterWindowMessage('SkypeControlAPIDiscover')
         @api_attach_message_id = Win32::RegisterWindowMessage('SkypeControlAPIAttach')
 
-        hInstance = Win32::GetModuleHandle(nil)
+        instance = Win32::GetModuleHandle(nil)
 
         @window_class = Win32::WNDCLASSEX.new
         @window_class[:style]         = Win32::CS_HREDRAW | Win32::CS_VREDRAW
         @window_class[:lpfnWndProc]   = method(:message_pump)
-        @window_class[:hInstance]     = hInstance
+        @window_class[:hInstance]     = instance
         @window_class[:hbrBackground] = Win32::COLOR_WINDOWFRAME
         @window_class[:lpszClassName] = FFI::MemoryPointer.from_string 'ruby-skype'
 
-        @window = Win32::CreateWindowEx(Win32::WS_EX_LEFT, ::FFI::Pointer.new(@window_class.atom), 'ruby-skype', Win32::WS_OVERLAPPEDWINDOW,
-                                        0, 0, 0, 0, Win32::NULL, Win32::NULL, hInstance, nil)
+        @window = Win32::CreateWindowEx(Win32::WS_EX_LEFT, ::FFI::Pointer.new(@window_class.handle), 'ruby-skype', Win32::WS_OVERLAPPEDWINDOW,
+                                        0, 0, 0, 0, Win32::NULL, Win32::NULL, instance, nil)
       end
 
+      # This is our message pump that receives messages from Windows.
+      #
+      # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms633573.aspx MSDN
       def message_pump(window_handle, message_id, wParam, lParam)
         puts "WM: #{message_id}" if Skype.DEBUG
         Win32::DefWindowProc(window_handle, message_id, wParam, lParam)

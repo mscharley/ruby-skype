@@ -13,11 +13,15 @@ class Skype
       include Observable
 
       # The protocol version supported by this communication protocol
+      #
+      # @return [Boolean]
       attr_reader :protocol_version
 
       # Sends a message to Skype.
       #
       # Must be implemented by Protocol implementers.
+      #
+      # @return [void]
       def send(message)
         raise "#send(message) must be implemented."
       end
