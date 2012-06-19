@@ -62,6 +62,17 @@ class Skype
         Skype::Errors::ExceptionFactory.generate_exception("ERROR 68") if @authorized == false
       end
 
+      # Attached to Skype successfully.
+      API_ATTACH_SUCCESS = 0
+      # Skype indicated that we should hold on.
+      API_ATTACH_PENDING = 1
+      # Attachment to Skype was refused.
+      API_ATTACH_REFUSED = 2
+      # Attachment to Skype isn't available currently. Typically there is no user logged in.
+      API_ATTACH_NOT_AVAILABLE = 3
+
+      private
+
       # This is our message pump that receives messages from Windows.
       #
       # The return value from DefWindowProc is important and must be returned somehow.
@@ -97,15 +108,6 @@ class Skype
             Win32::DefWindowProc(window_handle, message_id, wParam, lParam)
         end
       end
-
-      # Attached to Skype successfully.
-      API_ATTACH_SUCCESS = 0
-      # Skype indicated that we should hold on.
-      API_ATTACH_PENDING = 1
-      # Attachment to Skype was refused.
-      API_ATTACH_REFUSED = 2
-      # Attachment to Skype isn't available currently. Typically there is no user logged in.
-      API_ATTACH_NOT_AVAILABLE = 3
     end
   end
 end
