@@ -12,6 +12,8 @@ class Skype
       case RbConfig::CONFIG['host_os']
         when /mingw|cygwin|mswin/
           :windows
+        when /linux/
+          :linux
         else
           :unknown
       end
@@ -30,7 +32,7 @@ class Skype
           require 'skype/communication/windows'
           @skype = Skype::Communication::Windows.new(application_name)
         when :linux
-          require 'skype/communcation/dbus'
+          require 'skype/communication/dbus'
           @skype = Skype::Communication::DBus.new(application_name)
         else
           puts "Unfortunately, we don't support your platform currently."
