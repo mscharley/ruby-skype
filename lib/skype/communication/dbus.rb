@@ -21,11 +21,6 @@ class Skype
       # Interface for the Skype -> client communication function.
       SKYPE_CLIENT_INTERFACE = 'com.Skype.API.Client'
 
-      # Have we connected to Skype yet?
-      def connected?
-        @connected
-      end
-
       # Create a communication link to Skype via DBus. This initialises DBus, but doesn't attempt to connect to Skype
       # yet. See #connect.
       def initialize(application_name)
