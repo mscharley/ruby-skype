@@ -5,14 +5,39 @@ require 'skype/data_maps/user_visibility'
 # This class is the main interface between Ruby and Skype.
 
 class Skype
+  private
+
+  def platform
+    @platform ||=
+      case RUBY_PLATFORM
+        when /mingw/
+        when /cygwin/
+          :windows
+        else
+          :unknown
+      end
+  end
+
+  public
+
   # Initialises the Skype library and sets up a communication protocol, but doesn't connect yet.
   #
   # @param [String] application_name Name to use when identifying to Skype. Not all platforms use this value as Skype
   #     will automatically assign a name.
   def initialize(application_name, communication_protocol = nil)
     if communication_protocol.nil?
-      require 'skype/communication/dbus'
-      @skype = Skype::Communication::DBus.new(application_name)
+      case platform
+        when :windows
+          require 'skype/communication/windows'
+          @skype = Skype::Communication::Windows.new(application_name)
+        when :linux
+          require 'skype/communcation/dbus'
+          @skype = Skype::Communication::DBus.new(application_name)
+        else
+          puts "Unfortunately, we don't support your platform currently."
+          puts "Please file an issue if you think this is incorrect."
+          exit 1
+      end
     else
       @skype = communication_protocol
     end
