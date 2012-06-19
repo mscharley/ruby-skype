@@ -32,6 +32,7 @@ class Skype
 
         ULONG = FFI::TypeDefs[:ulong]
         LONG = FFI::TypeDefs[:long]
+        PVOID = FFI::TypeDefs[:pointer]
         LPVOID = FFI::TypeDefs[:pointer]
         INT = FFI::TypeDefs[:int]
         BYTE = FFI::TypeDefs[:uint16]
@@ -118,6 +119,13 @@ class Skype
                  :lParam, LPARAM,
                  :time, DWORD,
                  :pt, POINT
+        end
+
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms649010.aspx
+        class COPYDATASTRUCT < FFI::Struct
+          layout :dwData, ULONG_PTR,
+                 :cbData, DWORD,
+                 :lpData, PVOID
         end
 
         # @!method RegisterWindowMessage(message_name)
