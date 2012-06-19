@@ -10,8 +10,7 @@ class Skype
   def platform
     @platform ||=
       case RUBY_PLATFORM
-        when /mingw/
-        when /cygwin/
+        when /mingw|cygwin|mswin/
           :windows
         else
           :unknown
