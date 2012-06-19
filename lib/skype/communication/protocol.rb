@@ -29,7 +29,9 @@ class Skype
       #
       # Must be implemented by Protocol implementers.
       #
-      # @return [void]
+      # @param [string] message The message to send to Skype
+      # @return [string] The direct response from Skype
+      # @return [string] The direct response from Skype
       def send(message)
         raise "#send(message) must be implemented."
       end

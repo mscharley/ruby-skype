@@ -37,12 +37,13 @@ class Skype
       #
       # @return [void]
       def connect
-        Win32::SendMessage(Win32::HWND_BROADCAST, @api_discover_message_id, @window, 0)
-
-        # Setup a message for use by #tick. Do this just once so we're not setting up and tearing down local variables
-        # all the time.
+        # Do setup before sending message as Windows will process messages as well while in SendMessage()
         @msg = Win32::MSG.new
         @authorized = nil
+        @message_counter = 0
+        @replies = {}
+
+        Win32::SendMessage(Win32::HWND_BROADCAST, @api_discover_message_id, @window, 0)
       end
 
       # Update processing.
@@ -64,15 +65,26 @@ class Skype
 
       # Sends a message to Skype.
       #
-      # @return [void]
+      # @param [string] message The message to send to Skype
+      # @return [string] The direct response from Skype
       def send(message)
         puts "-> #{message}" if Skype.DEBUG
         data = Win32::COPYDATASTRUCT.new
-        data[:dwData] = 1
+        counter = next_message_counter
+        data[:dwData] = counter
         data[:cbData] = message.length + 1
         data[:lpData] = FFI::MemoryPointer.from_string(message + "\0")
 
         Win32::SendMessage(@skype_window, Win32::WM_COPYDATA, @window, pointer_to_long(data.to_ptr))
+
+        while @replies[counter].nil?
+          tick
+          sleep(0.1)
+        end
+
+        ret = @replies[counter]
+        @replies.delete(counter)
+        ret
       end
 
       # Attached to Skype successfully.
@@ -85,6 +97,10 @@ class Skype
       API_ATTACH_NOT_AVAILABLE = 3
 
       private
+
+      def next_message_counter
+        @message_counter += 1
+      end
 
       LPARAM_BITS = Win32::LPARAM.size * 8
 
@@ -114,6 +130,7 @@ class Skype
               when API_ATTACH_SUCCESS
                 @skype_window = wParam
                 send("NAME " + @application_name)
+                @protocol_version = send("PROTOCOL 8").sub(/^PROTOCOL\s+/, '').to_i
 
               when API_ATTACH_REFUSED
                 # Signal to the message pump that we were deauthorised
@@ -125,19 +142,18 @@ class Skype
 
             end
           when Win32::WM_COPYDATA
-            unless wParam == @skype_window
-              puts "WARNING: Dropping WM_COPYDATA on the floor from HWND #{wParam} (not Skype [#{@skype_window}])"
-              return 0
-            end
-
             pointer = FFI::Pointer.new(long_to_pointer(lParam))
             data = Win32::COPYDATASTRUCT.new pointer
 
-            p data[:dwData]
+            counter = data[:dwData]
             input = data[:lpData].read_string(data[:cbData]).sub(/\x00$/, '')
 
-            puts "<- #{input}" if Skype.DEBUG
-            receive(input)
+            if counter == 0
+              receive(input)
+            else
+              @replies[counter] = input
+              puts "<- #{input}" if Skype.DEBUG
+            end
 
             # Let Windows know we got it successfully
             1
