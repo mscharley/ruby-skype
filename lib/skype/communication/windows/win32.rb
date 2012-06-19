@@ -89,6 +89,10 @@ class Skype
 
           # Register class with Windows.
           def register_class_ex
+            # According to MSDN, you must add 1 to this value before registering. We shouldn't expect client code to
+            # remember to always do this.
+            self[:hbrBackground] = self[:hbrBackground] + 1 if self[:hbrBackground] > 0
+
             (@atom = Win32::RegisterClassEx(self)) != 0 ? @atom : raise("RegisterClassEx Error")
           end
 

@@ -26,7 +26,7 @@ class Skype
         @window_class[:style]         = Win32::CS_HREDRAW | Win32::CS_VREDRAW
         @window_class[:lpfnWndProc]   = method(:message_pump)
         @window_class[:hInstance]     = instance
-        @window_class[:hbrBackground] = Win32::COLOR_WINDOW + 1
+        @window_class[:hbrBackground] = Win32::COLOR_WINDOW
         @window_class[:lpszClassName] = FFI::MemoryPointer.from_string 'ruby-skype'
 
         @window = Win32::CreateWindowEx(Win32::WS_EX_LEFT, ::FFI::Pointer.new(@window_class.handle), 'ruby-skype', Win32::WS_OVERLAPPEDWINDOW,
