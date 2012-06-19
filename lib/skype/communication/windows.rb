@@ -26,7 +26,7 @@ class Skype
         @window_class[:style]         = Win32::CS_HREDRAW | Win32::CS_VREDRAW
         @window_class[:lpfnWndProc]   = method(:message_pump)
         @window_class[:hInstance]     = instance
-        @window_class[:hbrBackground] = Win32::COLOR_WINDOWFRAME
+        @window_class[:hbrBackground] = Win32::COLOR_WINDOW + 1
         @window_class[:lpszClassName] = FFI::MemoryPointer.from_string 'ruby-skype'
 
         @window = Win32::CreateWindowEx(Win32::WS_EX_LEFT, ::FFI::Pointer.new(@window_class.handle), 'ruby-skype', Win32::WS_OVERLAPPEDWINDOW,
@@ -83,7 +83,6 @@ class Skype
                 "WM: Ignoring API_DISCOVER response: #{lParam}"
             end
           when Win32::WM_COPYDATA
-            #@see http://msdn.microsoft.com/en-us/library/windows/desktop/ms649011(v=vs.85).aspx
             unless wParam == @skype_window
               puts "WARNING: Dropping WM_COPYDATA on the floor from HWND #{wParam} (not Skype [#{@skype_window}])"
               return 0
@@ -99,9 +98,13 @@ class Skype
         end
       end
 
+      # Attached to Skype successfully.
       API_ATTACH_SUCCESS = 0
-      API_ATTACH_PENDING_AUTHORIZATION = 1
+      # Skype indicated that we should hold on.
+      API_ATTACH_PENDING = 1
+      # Attachment to Skype was refused.
       API_ATTACH_REFUSED = 2
+      # Attachment to Skype isn't available currently. Typically there is no user logged in.
       API_ATTACH_NOT_AVAILABLE = 3
     end
   end

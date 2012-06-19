@@ -4,7 +4,7 @@
 # think I got it right below.
 
 # Originally written by: ﾒﾝｿｰﾚﾀﾑ
-# http://www19.atwiki.jp/tmtbnc/m/pages/56.html?guid=on
+# http://www19.atwiki.jp/tmtbnc/m/pages/56.html
 
 require 'ffi'
 

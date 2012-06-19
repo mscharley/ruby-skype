@@ -27,8 +27,6 @@ class Skype
           end
         end
 
-        public
-
         ULONG_PTR = FFI::TypeDefs[:ulong]
         LONG_PTR = FFI::TypeDefs[:long]
 
@@ -43,13 +41,24 @@ class Skype
         POINTER = FFI::TypeDefs[:pointer]
         VOID = FFI::TypeDefs[:void]
 
-        HWND = HICON = HCURSOR = HBRUSH = HINSTANCE = HGDIOBJ =
-            HMENU = HMODULE = HANDLE = ULONG_PTR
+        HANDLE = ULONG_PTR
+        HWND = HANDLE
+        HICON = HANDLE
+        HCURSOR = HANDLE
+        HBRUSH = HANDLE
+        HINSTANCE = HANDLE
+        HGDIOBJ = HANDLE
+        HMENU = HANDLE
+        HMODULE = HANDLE
+
         LPARAM = LONG_PTR
         WPARAM = ULONG_PTR
-        LPCTSTR = LPMSG = LPVOID
+        LPMSG = LPVOID
+        LPCTSTR = LPVOID
         LRESULT = LONG_PTR
         ATOM = BYTE
+
+        public
 
         # Provide a NULL constant so we can be a little more explicit.
         NULL = 0
@@ -217,16 +226,24 @@ class Skype
         # CreateWindow Use Default Value
         CW_USEDEFAULT = 0x80000000
 
+        #@!group HBRUSH colours
+
+        # System window colour
         COLOR_WINDOW = 5
-        COLOR_WINDOWFRAME = 6
 
         # @!group Class Style contants.
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ff729176.aspx MSDN
 
+        # Redraws the entire window if a movement or size adjustment changes the height of the client area.
         CS_VREDRAW = 0x0001
+        # Redraws the entire window if a movement or size adjustment changes the width of the client area.
         CS_HREDRAW = 0x0002
 
         # @!group Window Message constants
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644927.aspx#system_defined MSDN
 
+        # An application sends the WM_COPYDATA message to pass data to another application.
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms649011.aspx MSDN
         WM_COPYDATA = 0x004A
 
         # @!group PeekMessage constants
