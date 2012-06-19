@@ -15,6 +15,7 @@ spec = Gem::Specification.new do |s|
 
   s.required_ruby_version = '~> 1.9'
   s.add_development_dependency 'yard'
+  s.add_development_dependency 'rake'
 
   s.platform = ENV['GEM_PLATFORM']
   case ENV['GEM_PLATFORM']
