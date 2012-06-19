@@ -27,8 +27,17 @@ class Skype
           end
         end
 
-        ULONG_PTR = FFI::TypeDefs[:ulong]
-        LONG_PTR = FFI::TypeDefs[:long]
+        # @!group Windows Data Types
+        # @see http://msdn.microsoft.com/en-us/library/aa383751%28VS.85%29.aspx
+
+        # Check for 64b operating systems.
+        if [nil].pack('p').bytesize == 8
+          ULONG_PTR = FFI::TypeDefs[:uint64]
+          LONG_PTR = FFI::TypeDefs[:int64]
+        else
+          ULONG_PTR = FFI::TypeDefs[:ulong]
+          LONG_PTR = FFI::TypeDefs[:long]
+        end
 
         ULONG = FFI::TypeDefs[:ulong]
         LONG = FFI::TypeDefs[:long]
@@ -58,6 +67,8 @@ class Skype
         LPCTSTR = LPVOID
         LRESULT = LONG_PTR
         ATOM = BYTE
+
+        # @!endgroup
 
         public
 

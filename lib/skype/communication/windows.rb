@@ -29,7 +29,7 @@ class Skype
         @window_class[:hbrBackground] = Win32::COLOR_WINDOW
         @window_class[:lpszClassName] = FFI::MemoryPointer.from_string 'ruby-skype'
 
-        @window = Win32::CreateWindowEx(Win32::WS_EX_LEFT, ::FFI::Pointer.new(@window_class.handle), 'ruby-skype', Win32::WS_OVERLAPPEDWINDOW,
+        @window = Win32::CreateWindowEx(Win32::WS_EX_LEFT, FFI::Pointer.new(@window_class.handle), 'ruby-skype', Win32::WS_OVERLAPPEDWINDOW,
                                         0, 0, 0, 0, Win32::NULL, Win32::NULL, instance, nil)
       end
 
@@ -62,6 +62,19 @@ class Skype
         Skype::Errors::ExceptionFactory.generate_exception("ERROR 68") if @authorized == false
       end
 
+      # Sends a message to Skype.
+      #
+      # @return [void]
+      def send(message)
+        puts "-> #{message}" if Skype.DEBUG
+        data = Win32::COPYDATASTRUCT.new
+        data[:dwData] = 1
+        data[:cbData] = message.length + 1
+        data[:lpData] = FFI::MemoryPointer.from_string(message + "\0")
+
+        Win32::SendMessage(@skype_window, Win32::WM_COPYDATA, @window, pointer_to_long(data.to_ptr))
+      end
+
       # Attached to Skype successfully.
       API_ATTACH_SUCCESS = 0
       # Skype indicated that we should hold on.
@@ -72,6 +85,20 @@ class Skype
       API_ATTACH_NOT_AVAILABLE = 3
 
       private
+
+      LPARAM_BITS = Win32::LPARAM.size * 8
+
+      # Convert a ulong pointer value to a long int for use as a LPARAM because someone at Microsoft thought it'd be a
+      # good idea to pass around pointers as signed values.
+      def pointer_to_long(pointer)
+        pointer = pointer.to_i
+        pointer > (2 ** (LPARAM_BITS - 1)) ? pointer - (2 ** LPARAM_BITS) : pointer
+      end
+
+      # Allows us to unwrap a pointer from a long. See #pointer_to_long
+      def long_to_pointer(long)
+        long < 0 ? long + (2 ** LPARAM_BITS) : long
+      end
 
       # This is our message pump that receives messages from Windows.
       #
@@ -86,6 +113,7 @@ class Skype
             case lParam
               when API_ATTACH_SUCCESS
                 @skype_window = wParam
+                send("NAME " + @application_name)
               when API_ATTACH_REFUSED
                 # Signal to the message pump that we were deauthorised
                 @authorized = false
@@ -99,6 +127,7 @@ class Skype
               return 0
             end
 
+            lParam = long_to_pointer(lParam)
             puts "Incoming data from Skype: #{lParam}"
 
             # Let Windows know we got it successfully
