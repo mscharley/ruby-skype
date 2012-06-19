@@ -93,7 +93,7 @@ class Skype
             # Let Windows know we got it successfully
             1
           else
-            puts "WM: #{sprintf("0x%04x", message_id)}" if Skype.DEBUG
+            puts "Unhandled WM: #{sprintf("0x%04x", message_id)}" if Skype.DEBUG
             Win32::DefWindowProc(window_handle, message_id, wParam, lParam)
         end
       end
