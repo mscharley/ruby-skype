@@ -30,12 +30,6 @@ Installation
 For now, you will need to install from the git repository. Simply clone it
 to wherever you like and then add it to your include path if needed.
 
-Windows Support
----------------
-
-Window support has been started and is progressing well now. Check out the
-`windows` branch on GitHub if you are interested in helping out.
-
 Mac OS X Support
 ----------------
 
