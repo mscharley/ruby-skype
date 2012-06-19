@@ -9,7 +9,7 @@ class Skype
 
   def platform
     @platform ||=
-      case RUBY_PLATFORM
+      case RbConfig::CONFIG['host_os']
         when /mingw|cygwin|mswin/
           :windows
         else
