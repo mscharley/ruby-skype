@@ -211,11 +211,11 @@ class Skype
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644950.aspx MSDN
         _func(:SendMessage, :SendMessageA, [HWND, UINT, WPARAM, LPARAM], LRESULT)
 
-        # @!method TranslateMessage(message, window, filter_min, filter_max)
+        # @!method TranslateMessage(message)
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644955.aspx MSDN
         _func(:TranslateMessage, [LPVOID], BOOL)
 
-        # @!method DispatchMessage(message, window, filter_min, filter_max)
+        # @!method DispatchMessage(message)
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644934.aspx MSDN
         _func(:DispatchMessage, :DispatchMessageA, [LPVOID], BOOL)
 
