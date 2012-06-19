@@ -114,12 +114,15 @@ class Skype
               when API_ATTACH_SUCCESS
                 @skype_window = wParam
                 send("NAME " + @application_name)
+
               when API_ATTACH_REFUSED
                 # Signal to the message pump that we were deauthorised
                 @authorized = false
+
               else
                 # Ignore pending signal
                 "WM: Ignoring API_DISCOVER response: #{lParam}"
+
             end
           when Win32::WM_COPYDATA
             unless wParam == @skype_window
@@ -127,8 +130,14 @@ class Skype
               return 0
             end
 
-            lParam = long_to_pointer(lParam)
-            puts "Incoming data from Skype: #{lParam}"
+            pointer = FFI::Pointer.new(long_to_pointer(lParam))
+            data = Win32::COPYDATASTRUCT.new pointer
+
+            p data[:dwData]
+            input = data[:lpData].read_string(data[:cbData]).sub(/\x00$/, '')
+
+            puts "<- #{input}" if Skype.DEBUG
+            receive(input)
 
             # Let Windows know we got it successfully
             1
