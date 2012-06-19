@@ -4,7 +4,7 @@ Skype Public API for Ruby
 **GitHub:** https://github.com/mscharley/ruby-skype  
 **Author:** Matthew Scharley  
 **Contributors:** [See contributors on GitHub][gh-contrib]  
-**Bugs/Support:** [Github Issues][gh-issues]
+**Bugs/Support:** [Github Issues][gh-issues]  
 **Copyright:** 2012  
 **License:** [MIT license][license]
 
