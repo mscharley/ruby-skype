@@ -13,11 +13,25 @@ class Skype
       include Observable
 
       # The protocol version supported by this communication protocol
+      #
+      # @return [Boolean]
       attr_reader :protocol_version
+
+      # @!attribute [r] connected?
+      # Have we connected to Skype yet?
+      #
+      # @return [Boolean]
+      def connected?
+        @connected
+      end
 
       # Sends a message to Skype.
       #
       # Must be implemented by Protocol implementers.
+      #
+      # @param [string] message The message to send to Skype
+      # @return [string] The direct response from Skype
+      # @return [string] The direct response from Skype
       def send(message)
         raise "#send(message) must be implemented."
       end
