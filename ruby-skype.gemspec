@@ -1,7 +1,7 @@
 
 spec = Gem::Specification.new do |s|
   s.name = 'ruby-skype'
-  s.version = '0.0.1'
+  s.version = IO.read('VERSION').chomp
   s.author = 'Matthew Scharley'
   s.email = 'matt.scharley@gmail.com'
   s.summary = 'Ruby binding to the Skype Public API.'
@@ -28,5 +28,5 @@ spec = Gem::Specification.new do |s|
       exit 1
   end
 
-  s.files = Dir['{bin,lib}/**/*', 'README.md', 'LICENSE', 'examples/*'].to_a
+  s.files = Dir['{bin,lib}/**/*', 'VERSION', 'README.md', 'LICENSE', 'examples/*'].to_a
 end

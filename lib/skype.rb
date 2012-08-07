@@ -59,6 +59,13 @@ class Skype
     @debug_mode = value
   end
 
+  # Returns the currently in use version of the ruby-skype library.
+  #
+  # @return [String]
+  def self.VERSION
+    @version ||= IO.read(File.join(File.dirname(__FILE__), '..', 'VERSION')).chomp
+  end
+
   # Connect to Skype and negotiate a communication channel. Blocks till the connection is fully established.
   #
   # @return [Symbol] Initial value for user_status.

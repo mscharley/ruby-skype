@@ -1,7 +1,10 @@
 
+VERSION = IO.read('VERSION').chomp
+
 desc "Clean out old gems"
 task :clean do
-  rm_rf 'ruby-skype-*.gem'
+  gems = Dir.glob("ruby-skype-#{VERSION}-*.gem")
+  rm gems if not gems.empty?
 end
 
 desc "Build gems for all platforms"
