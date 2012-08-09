@@ -1,3 +1,9 @@
+begin
+  require 'cane/rake_task'
+rescue LoadError
+  warn "cane not available, please install development requirements"
+  exit 1
+end
 
 VERSION = IO.read('VERSION').chomp
 
@@ -7,8 +13,13 @@ task :clean do
   rm gems if not gems.empty?
 end
 
+desc "Check code quality"
+Cane::RakeTask.new(:quality) do |cane|
+
+end
+
 desc "Build gems for all platforms"
-task :gem => :clean do
+task :gem => [:clean, :quality] do
   %w{mswin32 mingw32 cygwin linux}.each do |platform|
     ENV['GEM_PLATFORM'] = platform
     sh 'gem', 'build', 'ruby-skype.gemspec'
