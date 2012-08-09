@@ -22,7 +22,7 @@ spec = Gem::Specification.new do |s|
     when 'mswin32', 'mingw32', 'cygwin'
       s.add_dependency 'ffi'
     when 'linux'
-      s.add_dependency 'ruby-dbus'
+      s.add_dependency 'ruby-dbus', '= 0.7.2'
     else
       puts "Invalid $GEM_PLATFORM value."
       exit 1

@@ -2,6 +2,23 @@
 require 'dbus'
 require 'skype/communication/protocol'
 
+# Monkey-patch dbus to fix an error till it makes it into a release
+class DBus::Connection
+  def update_buffer
+    @buffer += @socket.read_nonblock(MSG_BUF_SIZE)  
+  rescue EOFError
+    raise                     # the caller expects it
+  rescue Errno::EWOULDBLOCK
+    # simply fail the read if it would block
+    return
+  rescue Exception => e
+    puts "Oops:", e
+    raise if @is_tcp          # why?
+    puts "WARNING: read_nonblock failed, falling back to .recv"
+    @buffer += @socket.recv(MSG_BUF_SIZE)  
+  end
+end
+
 class Skype
   module Communication
     # This class handles communication with Skype via DBus.
