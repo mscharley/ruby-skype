@@ -22,7 +22,7 @@ end
 
 desc "Build gems for all platforms"
 task :gem => [:clean, :quality] do
-  %w{mswin32 mingw32 cygwin linux}.each do |platform|
+  %w{mswin32 mswin64 mingw32 cygwin linux}.each do |platform|
     ENV['GEM_PLATFORM'] = platform
     sh 'gem', 'build', 'ruby-skype.gemspec'
   end

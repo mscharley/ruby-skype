@@ -20,7 +20,7 @@ spec = Gem::Specification.new do |s|
 
   s.platform = ENV['GEM_PLATFORM']
   case ENV['GEM_PLATFORM']
-    when 'mswin32', 'mingw32', 'cygwin'
+    when 'mswin32', 'mswin64', 'mingw32', 'cygwin'
       s.add_dependency 'ffi'
     when 'linux'
       s.add_dependency 'ruby-dbus', '= 0.7.2'
