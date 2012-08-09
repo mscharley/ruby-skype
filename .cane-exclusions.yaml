@@ -1,2 +1,4 @@
 style:
   - lib/skype/communication/windows/win32.rb
+abc:
+  - Skype::Communication::Windows#message_pump

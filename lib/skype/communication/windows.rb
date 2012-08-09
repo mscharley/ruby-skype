@@ -160,7 +160,8 @@ class Skype
 
               else
                 # Ignore pending signal
-                "WM: Ignoring API_DISCOVER response: #{lParam}"
+                puts"WM: Ignoring API_DISCOVER response: #{lParam}" if
+                    Skype.DEBUG
 
             end
           when Win32::WM_COPYDATA
