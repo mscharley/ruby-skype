@@ -1,4 +1,5 @@
 
+require 'skype/command_manager'
 require 'skype/errors/exception_factory'
 require 'skype/data_maps/user_visibility'
 
@@ -43,6 +44,7 @@ class Skype
       @skype = communication_protocol
     end
 
+    @command_manager = CommandManager.new(self)
     @skype.add_observer(self, :received_command)
   end
 
@@ -93,6 +95,7 @@ class Skype
   # @return [void]
   def tick
     @skype.tick
+    nil
   end
 
   # Executes the Skype event loops. Doesn't return unless #quit is called.
@@ -182,15 +185,16 @@ class Skype
   # @param [String] command The command string to process.
   # @return [void]
   def received_command(command)
-    (command, args) = command.split(/\s+/, 2)
-    case command
-      when "CONNSTATUS"
-        @connection_status = args.downcase.to_sym
-      when "USERSTATUS"
-        @user_status = DataMaps::USER_VISIBILITY.invert[args]
-      else
-    end
-    puts "<= #{command} #{args}" if ::Skype.DEBUG
+    @command_manager.process_command(command)
+    puts "<= #{command}" if ::Skype.DEBUG
+  end
+
+  def update_user_status(status)
+    @user_status = status
+  end
+
+  def update_connection_status(status)
+    @connection_status = status
   end
 
   private
