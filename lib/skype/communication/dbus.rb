@@ -5,7 +5,7 @@ require 'skype/communication/protocol'
 # Monkey-patch dbus to fix an error till it makes it into a release
 class DBus::Connection
   def update_buffer
-    @buffer += @socket.read_nonblock(MSG_BUF_SIZE)  
+    @buffer += @socket.read_nonblock(MSG_BUF_SIZE)
   rescue EOFError
     raise                     # the caller expects it
   rescue Errno::EWOULDBLOCK
@@ -15,7 +15,7 @@ class DBus::Connection
     puts "Oops:", e
     raise if @is_tcp          # why?
     puts "WARNING: read_nonblock failed, falling back to .recv"
-    @buffer += @socket.recv(MSG_BUF_SIZE)  
+    @buffer += @socket.recv(MSG_BUF_SIZE)
   end
 end
 
@@ -38,8 +38,10 @@ class Skype
       # Interface for the Skype -> client communication function.
       SKYPE_CLIENT_INTERFACE = 'com.Skype.API.Client'
 
-      # Create a communication link to Skype via DBus. This initialises DBus, but doesn't attempt to connect to Skype
-      # yet. See #connect.
+      # Create a communication link to Skype via DBus. This initialises DBus,
+      # but doesn't attempt to connect to Skype yet.
+      #
+      # @see #connect.
       def initialize(application_name)
         @application_name = application_name
         @dbus = ::DBus::SessionBus.instance
@@ -51,8 +53,8 @@ class Skype
 
       # Attempt to connect to Skype.
       #
-      # For DBus, this includes exporting the client interface and then identifying ourselves and negotiating protocol
-      # version.
+      # For DBus, this includes exporting the client interface and then
+      # identifying ourselves and negotiating protocol version.
       #
       # @return [void]
       def connect
@@ -60,7 +62,8 @@ class Skype
         unless value == %w{OK}
           Skype::Errors::ExceptionFactory.generate_exception *value
         end
-        @protocol_version = @skype.Invoke("PROTOCOL 8")[0].sub(/^PROTOCOL\s+/, '').to_i
+        @protocol_version = @skype.Invoke("PROTOCOL 8")[0].
+            sub(/^PROTOCOL\s+/, '').to_i
         @connected = true
       end
 
@@ -78,8 +81,9 @@ class Skype
         ret
       end
 
-      # Poll DBus for incoming messages. We use this method for watching for our messages as it is simpler, and an
-      # event loop is required no matter what.
+      # Poll DBus for incoming messages. We use this method for watching for
+      # our messages as it is simpler, and an event loop is required no matter
+      # what.
       #
       # @return [void]
       def tick
@@ -89,7 +93,8 @@ class Skype
           @dbus.process(msg)
 
           # Process messages to us.
-          if msg.interface == SKYPE_CLIENT_INTERFACE && msg.path == SKYPE_CLIENT_PATH
+          if msg.interface == SKYPE_CLIENT_INTERFACE &&
+              msg.path == SKYPE_CLIENT_PATH
             receive(msg.params[0])
           end
         end

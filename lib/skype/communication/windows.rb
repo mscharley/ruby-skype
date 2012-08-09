@@ -4,21 +4,25 @@ require 'skype/communication/windows/win32'
 
 class Skype
   module Communication
-    # Utilises the Windows API to send and receive Window Messages to/from Skype.
-    # 
+    # Utilises the Windows API to send and receive Window Messages to/from
+    # Skype.
+    #
     # This protocol is only available on Windows and Cygwin.
     class Windows
       include Skype::Communication::Protocol
 
       # Sets up access to Skype
       #
-      # @see http://msdn.microsoft.com/en-us/library/bb384843.aspx Creating Win32-Based Applications
+      # @see http://msdn.microsoft.com/en-us/library/bb384843.aspx Creating
+      #     Win32-Based Applications
       def initialize(application_name)
         @application_name = application_name
 
         # Get the message id's for the Skype Control messages
-        @api_discover_message_id = Win32::RegisterWindowMessage('SkypeControlAPIDiscover')
-        @api_attach_message_id = Win32::RegisterWindowMessage('SkypeControlAPIAttach')
+        @api_discover_message_id =
+            Win32::RegisterWindowMessage('SkypeControlAPIDiscover')
+        @api_attach_message_id =
+            Win32::RegisterWindowMessage('SkypeControlAPIAttach')
 
         instance = Win32::GetModuleHandle(nil)
 
@@ -27,29 +31,37 @@ class Skype
         @window_class[:lpfnWndProc]   = method(:message_pump)
         @window_class[:hInstance]     = instance
         @window_class[:hbrBackground] = Win32::COLOR_WINDOW
-        @window_class[:lpszClassName] = FFI::MemoryPointer.from_string 'ruby-skype'
+        @window_class[:lpszClassName] =
+            FFI::MemoryPointer.from_string 'ruby-skype'
 
-        @window = Win32::CreateWindowEx(Win32::WS_EX_LEFT, FFI::Pointer.new(@window_class.handle), 'ruby-skype', Win32::WS_OVERLAPPEDWINDOW,
-                                        0, 0, 0, 0, Win32::NULL, Win32::NULL, instance, nil)
+        @window = Win32::CreateWindowEx(Win32::WS_EX_LEFT,
+                                        FFI::Pointer.new(@window_class.handle),
+                                        'ruby-skype',
+                                        Win32::WS_OVERLAPPEDWINDOW,
+                                        0, 0, 0, 0, Win32::NULL, Win32::NULL,
+                                        instance, nil)
       end
 
       # Connects to Skype.
       #
       # @return [void]
       def connect
-        # Do setup before sending message as Windows will process messages as well while in SendMessage()
+        # Do setup before sending message as Windows will process messages as
+        # well while in SendMessage()
         @msg = Win32::MSG.new
         @authorized = nil
         @message_counter = 0
         @replies = {}
 
-        Win32::SendMessage(Win32::HWND_BROADCAST, @api_discover_message_id, @window, 0)
+        Win32::SendMessage(Win32::HWND_BROADCAST, @api_discover_message_id,
+                           @window, 0)
       end
 
       # Update processing.
       #
-      # This executes a Windows event loop while there are messages still pending, then dumps back out to let other
-      # things take over and do their thing.
+      # This executes a Windows event loop while there are messages still
+      # pending, then dumps back out to let other things take over and do their
+      # thing.
       #
       # @return [void]
       def tick
@@ -60,7 +72,9 @@ class Skype
 
         # Don't simplify this as we rely on false != nil for tribool values
         #noinspection RubySimplifyBooleanInspection
-        Skype::Errors::ExceptionFactory.generate_exception("ERROR 68") if @authorized == false
+        if @authorized == false
+          Skype::Errors::ExceptionFactory.generate_exception("ERROR 68")
+        end
       end
 
       # Sends a message to Skype.
@@ -75,7 +89,8 @@ class Skype
         data[:cbData] = message.length + 1
         data[:lpData] = FFI::MemoryPointer.from_string(message + "\0")
 
-        Win32::SendMessage(@skype_window, Win32::WM_COPYDATA, @window, pointer_to_long(data.to_ptr))
+        Win32::SendMessage(@skype_window, Win32::WM_COPYDATA, @window,
+                           pointer_to_long(data.to_ptr))
 
         while @replies[counter].nil?
           tick
@@ -93,7 +108,8 @@ class Skype
       API_ATTACH_PENDING = 1
       # Attachment to Skype was refused.
       API_ATTACH_REFUSED = 2
-      # Attachment to Skype isn't available currently. Typically there is no user logged in.
+      # Attachment to Skype isn't available currently. Typically there is no
+      # user logged in.
       API_ATTACH_NOT_AVAILABLE = 3
 
       private
@@ -104,11 +120,13 @@ class Skype
 
       LPARAM_BITS = Win32::LPARAM.size * 8
 
-      # Convert a ulong pointer value to a long int for use as a LPARAM because someone at Microsoft thought it'd be a
-      # good idea to pass around pointers as signed values.
+      # Convert a ulong pointer value to a long int for use as a LPARAM because
+      # someone at Microsoft thought it'd be a good idea to pass around
+      # pointers as signed values.
       def pointer_to_long(pointer)
         pointer = pointer.to_i
-        pointer > (2 ** (LPARAM_BITS - 1)) ? pointer - (2 ** LPARAM_BITS) : pointer
+        pointer > (2 ** (LPARAM_BITS - 1)) ?
+            pointer - (2 ** LPARAM_BITS) : pointer
       end
 
       # Allows us to unwrap a pointer from a long. See #pointer_to_long
@@ -118,9 +136,12 @@ class Skype
 
       # This is our message pump that receives messages from Windows.
       #
-      # The return value from DefWindowProc is important and must be returned somehow.
+      # The return value from DefWindowProc is important and must be returned
+      # somehow.
       #
-      # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms633573.aspx MSDN
+      # @see
+      #   http://msdn.microsoft.com/en-us/library/windows/desktop/ms633573.aspx
+      #   MSDN
       def message_pump(window_handle, message_id, wParam, lParam)
         case message_id
           when @api_attach_message_id
@@ -130,7 +151,8 @@ class Skype
               when API_ATTACH_SUCCESS
                 @skype_window = wParam
                 send("NAME " + @application_name)
-                @protocol_version = send("PROTOCOL 8").sub(/^PROTOCOL\s+/, '').to_i
+                @protocol_version = send("PROTOCOL 8").sub(/^PROTOCOL\s+/, '').
+                    to_i
 
               when API_ATTACH_REFUSED
                 # Signal to the message pump that we were deauthorised

@@ -15,7 +15,9 @@ end
 
 desc "Check code quality"
 Cane::RakeTask.new(:quality) do |cane|
-
+  cane.exclusions_file = '.cane-exclusions.yaml'
+  #cane.style_measure = 120
+  cane.no_doc = true
 end
 
 desc "Build gems for all platforms"

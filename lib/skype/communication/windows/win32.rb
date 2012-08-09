@@ -4,8 +4,9 @@ require 'ffi'
 class Skype
   module Communication
     class Windows
-      # This module is used to provide access to the Win32 API to Ruby. There is lots of stuff here that is poorly named
-      # but tries stick closely to the original Win32 API for ease of reference.
+      # This module is used to provide access to the Win32 API to Ruby. There
+      # is lots of stuff here that is poorly named but tries stick closely to
+      # the original Win32 API for ease of reference.
       #
       # BEWARE: Here there be dragons aplenty.
       module Win32
@@ -101,11 +102,15 @@ class Skype
 
           # Register class with Windows.
           def register_class_ex
-            # According to MSDN, you must add 1 to this value before registering. We shouldn't expect client code to
-            # remember to always do this.
-            self[:hbrBackground] = self[:hbrBackground] + 1 if self[:hbrBackground] > 0
+            # According to MSDN, you must add 1 to this value before
+            # registering. We shouldn't expect client code to remember to
+            # always do this.
+            if self[:hbrBackground] > 0
+              self[:hbrBackground] = self[:hbrBackground] + 1
+            end
 
-            (@atom = Win32::RegisterClassEx(self)) != 0 ? @atom : raise("RegisterClassEx Error")
+            (@atom = Win32::RegisterClassEx(self)) != 0 ?
+                @atom : raise("RegisterClassEx Error")
           end
 
           # @!attribute [r] handle
@@ -141,7 +146,8 @@ class Skype
 
         # @!method RegisterWindowMessage(message_name)
         #
-        # Registers a Window Message with Windows or returns a handle to an existing message.
+        # Registers a Window Message with Windows or returns a handle to an
+        # existing message.
         #
         # @param [String] message_name The name of the message to register
         # @return [Handle]
@@ -150,10 +156,11 @@ class Skype
 
         # @!method GetModuleHandle(module_name)
         #
-        # Used to obtain a handle to a module loaded by the application. If passed DL::NULL then returns a
-        # handle to the current module.
+        # Used to obtain a handle to a module loaded by the application. If
+        # passed DL::NULL then returns a handle to the current module.
         #
-        # @param [String|DL::NULL] module_name The name of the module to return a handle to.
+        # @param [String|DL::NULL] module_name The name of the module to return
+        #     a handle to.
         # @return [ModuleHandle]
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms683199.aspx MSDN
         _func(:GetModuleHandle, :GetModuleHandleA, [LPCTSTR], HMODULE)
@@ -171,11 +178,16 @@ class Skype
         #
         # Creates a new window.
         #
-        # @param [Integer] extended_style A combination of WS_EX_* constant values defining the extended style for this window.
-        # @param [String] window_class This matches up with a registered WindowClass's lpszClassName parameter.
-        # @param [String] window_name This is the title of the newly created window.
-        # @param [Integer] style A combination of the WS_* constant values defining the style for this window.
-        # @param [Integer] x The horizontal position of the window on the screen.
+        # @param [Integer] extended_style A combination of WS_EX_* constant
+        #     values defining the extended style for this window.
+        # @param [String] window_class This matches up with a registered
+        #     WindowClass's lpszClassName parameter.
+        # @param [String] window_name This is the title of the newly created
+        #     window.
+        # @param [Integer] style A combination of the WS_* constant values
+        #     defining the style for this window.
+        # @param [Integer] x The horizontal position of the window on the
+        #     screen.
         # @param [Integer] y The vertical position of the window on the screen.
         # @param [Integer] width The width of the window to create.
         # @param [Integer] height The height of the window to create.
@@ -184,30 +196,43 @@ class Skype
         # @param [InstanceHandle] instance
         # @return [WindowHandle]
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms632680.aspx MSDN
-        _func(:CreateWindowEx, :CreateWindowExA, [DWORD, LPCTSTR, LPCTSTR, DWORD, INT, INT, INT, INT, HWND, HMENU, HINSTANCE, LPVOID], HWND)
+        _func(:CreateWindowEx, :CreateWindowExA, [DWORD, LPCTSTR, LPCTSTR,
+                                                  DWORD, INT, INT, INT, INT,
+                                                  HWND, HMENU, HINSTANCE,
+                                                  LPVOID],
+              HWND)
 
         # @!method GetMessage(message, window, filter_min, filter_max)
         #
-        # Get a message from the message queue. Blocks until there is one to return. Compare with PeekMessage().
+        # Get a message from the message queue. Blocks until there is one to
+        # return. Compare with PeekMessage().
         #
-        # @param [MSG] message **[out]** A message structure to output the incoming message to.
+        # @param [MSG] message **[out]** A message structure to output the
+        #     incoming message to.
         # @param [WindowHandle] window Which window to get messages for.
-        # @param [Integer] filter_min The first message to return, numerically. For suggestions, see MSDN.
-        # @param [Integer] filter_max The last message to return, numerically. If min and max are both 0 then all
-        #                             messages are returned. For suggestions, see MSDN.
-        # @return [Integer] -1 on error, otherwise 0 or 1 indicating whether to keep processing.
+        # @param [Integer] filter_min The first message to return, numerically.
+        #     For suggestions, see MSDN.
+        # @param [Integer] filter_max The last message to return, numerically.
+        #     If min and max are both 0 then all messages are returned. For
+        #     suggestions, see MSDN.
+        # @return [Integer] -1 on error, otherwise 0 or 1 indicating whether to
+        #     keep processing.
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644936.aspx MSDN
         _func(:GetMessage, :GetMessageA, [LPMSG, HWND, UINT, UINT], BOOL)
 
         # @!method PeekMessage(message, window, filter_min, filter_max, remove_message)
         #
-        # Peek at a message from the message queue and optionally remove it. Never blocks. Compare with GetMessage().
+        # Peek at a message from the message queue and optionally remove it.
+        # Never blocks. Compare with GetMessage().
         #
-        # @param [MSG] message **[out]** A message structure to output the incoming message to.
+        # @param [MSG] message **[out]** A message structure to output the
+        #     incoming message to.
         # @param [WindowHandle] window Which window to get messages for.
-        # @param [Integer] filter_min The first message to return, numerically. For suggestions, see MSDN.
-        # @param [Integer] filter_max The last message to return, numerically. If min and max are both 0 then all
-        #                             messages are returned. For suggestions, see MSDN.
+        # @param [Integer] filter_min The first message to return, numerically.
+        #     For suggestions, see MSDN.
+        # @param [Integer] filter_max The last message to return, numerically.
+        #     If min and max are both 0 then all messages are returned. For
+        #     suggestions, see MSDN.
         # @param [Integer] remove_message One of the PM_* values.
         # @return [Integer] 0 or 1 indicating whether to keep processing.
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644943.aspx MSDN
@@ -237,11 +262,13 @@ class Skype
 
         # @!group Predefined WindowHandle's
         #
-        # These are WindowHandle's provided by the Win32 API for special purposes.
+        # These are WindowHandle's provided by the Win32 API for special
+        # purposes.
 
         # Target for SendMessage(). Broadcast to all windows.
         HWND_BROADCAST = 0xffff
-        # Used as a parent in CreateWindow(). Signifies that this should be a message-only window.
+        # Used as a parent in CreateWindow(). Signifies that this should be a
+        # message-only window.
         HWND_MESSAGE = -3
 
         # @!endgroup
@@ -257,23 +284,28 @@ class Skype
         # @!group Class Style contants.
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ff729176.aspx MSDN
 
-        # Redraws the entire window if a movement or size adjustment changes the height of the client area.
+        # Redraws the entire window if a movement or size adjustment changes
+        # the height of the client area.
         CS_VREDRAW = 0x0001
-        # Redraws the entire window if a movement or size adjustment changes the width of the client area.
+        # Redraws the entire window if a movement or size adjustment changes
+        # the width of the client area.
         CS_HREDRAW = 0x0002
 
         # @!group Window Message constants
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644927.aspx#system_defined MSDN
 
-        # An application sends the WM_COPYDATA message to pass data to another application.
+        # An application sends the WM_COPYDATA message to pass data to another
+        # application.
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms649011.aspx MSDN
         WM_COPYDATA = 0x004A
 
         # @!group PeekMessage constants
 
-        # Messages are not removed from the queue after processing by #PeekMessage().
+        # Messages are not removed from the queue after processing by
+        # #PeekMessage().
         PM_NOREMOVE = 0
-        # Messages are removed from the queue after processing by #PeekMessage().
+        # Messages are removed from the queue after processing by
+        # #PeekMessage().
         PM_REMOVE   = 1
 
         # @!group Window Style constants
@@ -285,9 +317,11 @@ class Skype
         WS_BORDER =      0x00800000
         # The window has a title bar
         WS_CAPTION =     0x00C00000
-        # The window is initially disabled. A disabled window cannot receive input from the user.
+        # The window is initially disabled. A disabled window cannot receive
+        # input from the user.
         WS_DISABLED =    0x08000000
-        # The window is an overlapped window. An overlapped window has a title bar and a border.
+        # The window is an overlapped window. An overlapped window has a title
+        # bar and a border.
         WS_OVERLAPPED =  0x00000000
         # The windows is a pop-up window.
         WS_POPUP =       0x80000000
@@ -302,7 +336,8 @@ class Skype
         # The window has a minimize button.
         WS_MINIMIZEBOX = 0x00020000
         # The window is an overlapped window.
-        WS_OVERLAPPEDWINDOW = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX
+        WS_OVERLAPPEDWINDOW = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU |
+            WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX
         # The window is a pop-up window.
         WS_POPUPWINDOW = WS_POPUP | WS_BORDER | WS_SYSMENU
 

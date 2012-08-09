@@ -5,10 +5,11 @@ class Skype
   # You shouldn't try including this module, it is used purely for organisation.
   # @private
   module Communication
-    # Interface for the Skype::Communication::* classes. This provides basic input and output functionality with Skype.
+    # Interface for the Skype::Communication::* classes. This provides basic
+    # input and output functionality with Skype.
     #
-    # Includes Observable. Notifications sent will have a single string parameter which is the incoming command from
-    # Skype.
+    # Includes Observable. Notifications sent will have a single string
+    # parameter which is the incoming command from Skype.
     module Protocol
       include Observable
 
@@ -47,7 +48,8 @@ class Skype
 
       # Update processing. This is where you get a chance to check for input.
       #
-      # Should be implemented by Protocol implementers, but no error is thrown if not.
+      # Should be implemented by Protocol implementers, but no error is thrown
+      # if not.
       #
       # @return [void]
       def tick
@@ -57,7 +59,8 @@ class Skype
 
       # Internal method to implement Observable.
       #
-      # Protocol implementers may use this to send notifications of incoming commands.
+      # Protocol implementers may use this to send notifications of incoming
+      # commands.
       def receive(message)
         changed
         notify_observers(message)

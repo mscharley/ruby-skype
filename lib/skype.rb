@@ -3,7 +3,6 @@ require 'skype/errors/exception_factory'
 require 'skype/data_maps/user_visibility'
 
 # This class is the main interface between Ruby and Skype.
-
 class Skype
   private
 
@@ -21,10 +20,11 @@ class Skype
 
   public
 
-  # Initialises the Skype library and sets up a communication protocol, but doesn't connect yet.
+  # Initialises the Skype library and sets up a communication protocol, but
+  # doesn't connect yet.
   #
-  # @param [String] application_name Name to use when identifying to Skype. Not all platforms use this value as Skype
-  #     will automatically assign a name.
+  # @param [String] application_name Name to use when identifying to Skype. Not
+  #     all platforms use this value as Skype will automatically assign a name.
   def initialize(application_name, communication_protocol = nil)
     if communication_protocol.nil?
       case platform
@@ -46,8 +46,8 @@ class Skype
     @skype.add_observer(self, :received_command)
   end
 
-  # Controls whether the library should output extra debugging information or not.
-  # Currently controls whether we should output all network throughput.
+  # Controls whether the library should output extra debugging information or
+  # not. Currently controls whether we should output all network throughput.
   #
   # @return [Boolean]
   def self.DEBUG
@@ -63,10 +63,12 @@ class Skype
   #
   # @return [String]
   def self.VERSION
-    @version ||= IO.read(File.join(File.dirname(__FILE__), '..', 'VERSION')).chomp
+    @version ||=
+        IO.read(File.join(File.dirname(__FILE__), '..', 'VERSION')).chomp
   end
 
-  # Connect to Skype and negotiate a communication channel. Blocks till the connection is fully established.
+  # Connect to Skype and negotiate a communication channel. Blocks till the
+  # connection is fully established.
   #
   # @return [Symbol] Initial value for user_status.
   def connect
@@ -165,7 +167,8 @@ class Skype
     nil
   end
 
-  # The protocol version in use for the connection with Skype. This value is only reliable once connected.
+  # The protocol version in use for the connection with Skype. This value is
+  # only reliable once connected.
   #
   # @return [Integer] The version number of the protocol in use.
   def protocol_version
