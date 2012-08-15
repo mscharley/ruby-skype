@@ -53,7 +53,7 @@ class Skype
         @message_counter = 0
         @replies = {}
 
-        Win32::SendMessage(Win32::HWND_BROADCAST, @api_discover_message_id,
+        Win32::PostMessage(Win32::HWND_BROADCAST, @api_discover_message_id,
                            @window, 0)
       end
 
@@ -84,22 +84,13 @@ class Skype
       def send(message)
         puts "-> #{message}" if Skype.DEBUG
         data = Win32::COPYDATASTRUCT.new
-        counter = next_message_counter
-        data[:dwData] = counter
+        data[:dwData] = 0
         data[:cbData] = message.length + 1
         data[:lpData] = FFI::MemoryPointer.from_string(message + "\0")
 
         Win32::SendMessage(@skype_window, Win32::WM_COPYDATA, @window,
                            pointer_to_long(data.to_ptr))
-
-        while @replies[counter].nil?
-          tick
-          sleep(0.1)
-        end
-
-        ret = @replies[counter]
-        @replies.delete(counter)
-        ret
+        nil
       end
 
       # Attached to Skype successfully.
@@ -144,15 +135,15 @@ class Skype
       #   MSDN
       def message_pump(window_handle, message_id, wParam, lParam)
         case message_id
-          when @api_attach_message_id
-            # Drop API_ATTACH messages on the floor
           when @api_discover_message_id
+            # Drop WM_API_DISCOVER messages on the floor
+          when @api_attach_message_id
             case lParam
               when API_ATTACH_SUCCESS
                 @skype_window = wParam
                 send("NAME " + @application_name)
-                @protocol_version = send("PROTOCOL 8").sub(/^PROTOCOL\s+/, '').
-                    to_i
+                send("PROTOCOL 8")
+                @authorized = true
 
               when API_ATTACH_REFUSED
                 # Signal to the message pump that we were deauthorised
@@ -160,7 +151,7 @@ class Skype
 
               else
                 # Ignore pending signal
-                puts"WM: Ignoring API_DISCOVER response: #{lParam}" if
+                puts "WM: Ignoring WM_API_ATTACH response: #{lParam}" if
                     Skype.DEBUG
 
             end
@@ -168,21 +159,14 @@ class Skype
             pointer = FFI::Pointer.new(long_to_pointer(lParam))
             data = Win32::COPYDATASTRUCT.new pointer
 
-            counter = data[:dwData]
-            input = data[:lpData].read_string(data[:cbData]).sub(/\x00$/, '')
+            input = data[:lpData].read_string(data[:cbData] - 1)
+            receive(input)
 
-            if counter == 0
-              receive(input)
-            else
-              @replies[counter] = input
-              puts "<- #{input}" if Skype.DEBUG
-            end
-
-            # Let Windows know we got it successfully
-            1
+            # Let Skype know we got it successfully
+            return 1
           else
             puts "Unhandled WM: #{sprintf("0x%04x", message_id)}" if Skype.DEBUG
-            Win32::DefWindowProc(window_handle, message_id, wParam, lParam)
+            return Win32::DefWindowProc(window_handle, message_id, wParam, lParam)
         end
       end
     end

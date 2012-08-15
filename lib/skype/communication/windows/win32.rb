@@ -247,6 +247,15 @@ class Skype
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644950.aspx MSDN
         _func(:SendMessage, :SendMessageA, [HWND, UINT, WPARAM, LPARAM], LRESULT)
 
+        # @!method PostMessage(window, message, wParam, lParam)
+        #
+        # Send a message to another window and return without waiting for a reply.
+        #
+        # @param [WindowHandle] window Which window to send the message to.
+        # @param [Integer] message WM_* message to send.
+        # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644950.aspx MSDN
+        _func(:PostMessage, :PostMessageA, [HWND, UINT, WPARAM, LPARAM], LRESULT)
+
         # @!method TranslateMessage(message)
         # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms644955.aspx MSDN
         _func(:TranslateMessage, [LPVOID], BOOL)
