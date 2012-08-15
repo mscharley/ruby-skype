@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
 
-$:.push('lib')
+$:.push('lib', '../lib')
 
 require 'skype'
+Skype.DEBUG = true
 skype = Skype.new('ruby-skype-test')
+puts "Using ruby-skype-#{Skype.VERSION}"
 skype.connect
 puts "Connected using protocol version #{skype.protocol_version}"
 

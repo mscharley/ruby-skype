@@ -3,7 +3,7 @@
 # This program simply attaches to Skype and runs an event loop. Can be used as a starting point, or a way to
 # listen for new update commands that we may not know about yet.
 
-$:.push('lib')
+$:.push('lib', '../lib')
 
 require 'skype'
 Skype.DEBUG = true
