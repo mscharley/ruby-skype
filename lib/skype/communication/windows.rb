@@ -191,7 +191,8 @@ class Skype
             return 1
           else
             puts "Unhandled WM: #{sprintf("0x%04x", message_id)}" if Skype.DEBUG
-            return Win32::DefWindowProc(window_handle, message_id, wParam, lParam)
+            return Win32::DefWindowProc(
+                window_handle, message_id, wParam, lParam)
         end
       end
     end
