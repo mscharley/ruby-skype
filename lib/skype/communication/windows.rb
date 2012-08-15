@@ -83,6 +83,10 @@ class Skype
       # @return [string] The direct response from Skype
       def send(message)
         puts "-> #{message}" if Skype.DEBUG
+
+        counter = next_message_counter
+        message = "##{counter} #{message}"
+
         data = Win32::COPYDATASTRUCT.new
         data[:dwData] = 0
         data[:cbData] = message.length + 1
@@ -90,7 +94,15 @@ class Skype
 
         Win32::SendMessage(@skype_window, Win32::WM_COPYDATA, @window,
                            pointer_to_long(data.to_ptr))
-        nil
+
+        while @replies[counter].nil?
+          tick
+          sleep(0.1)
+        end
+
+        ret = @replies[counter]
+        @replies.delete(counter)
+        ret
       end
 
       # Attached to Skype successfully.
@@ -142,7 +154,8 @@ class Skype
               when API_ATTACH_SUCCESS
                 @skype_window = wParam
                 send("NAME " + @application_name)
-                send("PROTOCOL 8")
+                @protocol_version = send("PROTOCOL 8").sub(/^PROTOCOL\s+/, '').
+                    to_i
                 @authorized = true
 
               when API_ATTACH_REFUSED
@@ -160,7 +173,19 @@ class Skype
             data = Win32::COPYDATASTRUCT.new pointer
 
             input = data[:lpData].read_string(data[:cbData] - 1)
-            receive(input)
+            if input[0] == '#'
+              (counter, input) = input.split(/\s+/, 2)
+              counter = counter.gsub(/^#/, '').to_i
+            else
+              counter = nil
+            end
+
+            if counter.nil?
+              receive(input)
+            else
+              @replies[counter] = input
+              puts "<- #{input}" if Skype.DEBUG
+            end
 
             # Let Skype know we got it successfully
             return 1
