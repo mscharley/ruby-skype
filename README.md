@@ -42,7 +42,8 @@ Mac OS X Support
 OS X integration should be possible, however I don't have a Mac to
 test/develop with. If you want to help out, then look at the 
 `Skype::Communication::*` classes. `Skype::Communication::Protocol` is the
-base interface you need to implement. Any help would be greatly appreciated!
+base interface you need to implement. See [GH-8][gh-8] for more information. 
+Any help would be greatly appreciated!
 
 Documentation
 -------------
@@ -63,4 +64,5 @@ Generate a Ruby friendly front-end to access the Skype public API.
   [ruby-skype-rubydoc]: http://rubydoc.info/github/mscharley/ruby-skype/frames
   [gh-contrib]: https://github.com/mscharley/ruby-skype/graphs/contributors
   [gh-issues]: https://github.com/mscharley/ruby-skype/issues
+  [gh-8]: https://github.com/mscharley/ruby-skype/issues/8
 
