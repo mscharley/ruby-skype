@@ -60,7 +60,7 @@ Generate a Ruby friendly front-end to access the Skype public API.
 
   [skype-api]: http://developer.skype.com/public-api-reference
   [license]: https://raw.github.com/mscharley/ruby-skype/master/LICENSE
-  [ruby-skype-rubydoc]: http://rubydoc.info/github/mscharley/ruby-skype/master/frames
+  [ruby-skype-rubydoc]: http://rubydoc.info/github/mscharley/ruby-skype/frames
   [gh-contrib]: https://github.com/mscharley/ruby-skype/graphs/contributors
   [gh-issues]: https://github.com/mscharley/ruby-skype/issues
 
