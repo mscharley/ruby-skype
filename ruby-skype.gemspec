@@ -18,16 +18,7 @@ spec = Gem::Specification.new do |s|
   s.add_development_dependency 'rake'
   s.add_development_dependency 'cane'
 
-  s.platform = ENV['GEM_PLATFORM']
-  case ENV['GEM_PLATFORM']
-    when 'mswin32', 'mswin64', 'mingw32', 'cygwin'
-      s.add_dependency 'ffi'
-    when 'linux'
-      s.add_dependency 'ruby-dbus', '= 0.7.2'
-    else
-      puts "Invalid $GEM_PLATFORM value."
-      exit 1
-  end
+  s.extensions = 'ext/mkrf_conf.rb'
 
   s.files = Dir[
       '{bin,lib}/**/*',
