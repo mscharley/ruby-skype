@@ -20,11 +20,18 @@ Cane::RakeTask.new(:quality) do |cane|
   cane.no_doc = true
 end
 
+desc "Generate documentation with reports"
+task :doc do
+  sh 'yard', '--no-stats'
+  sh 'yard', 'stats', '--list-undoc'
+end
+
 desc "Build gems for all platforms"
 task :gem => [:clean, :quality] do
   sh 'gem', 'build', 'ruby-skype.gemspec'
 end
 
+desc "Publish gems to the world via rubygems.org"
 task :publish => [:gem] do
   sh 'gem', 'push', "ruby-skype-#{VERSION}.gem"
 end
