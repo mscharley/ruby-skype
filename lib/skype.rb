@@ -36,8 +36,10 @@ class Skype
           require 'skype/communication/dbus'
           @skype = Skype::Communication::DBus.new(application_name)
         else
-          puts "Unfortunately, we don't support your platform currently."
-          puts "Please file an issue if you think this is incorrect."
+          puts "Unfortunately, we don't support your platform currently.\n" +
+            "Please file an issue if you believe this is incorrect and " +
+            "include that your host_os is #{RbConfig::CONFIG['host_os']}.\n\n" +
+            "https://github.com/mscharley/ruby-skype/issues"
           exit 1
       end
     else
