@@ -24,3 +24,7 @@ desc "Build gems for all platforms"
 task :gem => [:clean, :quality] do
   sh 'gem', 'build', 'ruby-skype.gemspec'
 end
+
+task :publish => [:gem] do
+  sh 'gem', 'push', "ruby-skype-#{VERSION}.gem"
+end
