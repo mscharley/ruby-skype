@@ -30,6 +30,12 @@ Installation
 For now, you will need to install from the git repository. Simply clone it
 to wherever you like and then add it to your include path if needed.
 
+There are also prerelease versions available via `gem` if you want to test
+out a stable version, however at this early stage these may not be as useful
+as the development version in git. You may install the gem version with
+
+    gem install ruby-skype --pre
+
 Mac OS X Support
 ----------------
 
