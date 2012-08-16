@@ -3,6 +3,7 @@ require 'dbus'
 require 'skype/communication/protocol'
 
 # Monkey-patch dbus to fix an error till it makes it into a release
+# @api private
 class DBus::Connection
   def update_buffer
     @buffer += @socket.read_nonblock(MSG_BUF_SIZE)
