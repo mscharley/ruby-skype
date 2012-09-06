@@ -121,6 +121,8 @@ class Skype
     @finished = false
     until @finished
       tick
+      changed
+      notify_observers(:tick, [])
       sleep(0.1)
     end
   end
