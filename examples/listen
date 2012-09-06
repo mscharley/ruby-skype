@@ -5,9 +5,31 @@
 # know about yet.
 
 $:.push('lib', '../lib')
-
 require 'skype'
 Skype.DEBUG = true
-skype = Skype.new('ruby-skype-listen-in')
-skype.connect
-skype.run
+
+class ListenExample
+  def initialize
+    @skype = Skype.new('ruby-skype-listen-in')
+    @skype.add_observer(self, :skype_tick)
+  end
+
+  def skype_tick(event, args)
+    case event
+      when :tick
+        begin
+          STDIN.read_nonblock 1024
+        rescue Errno::EWOULDBLOCK
+        rescue EOFError
+          @skype.quit
+        end
+    end
+  end
+
+  def run
+    @skype.connect
+    @skype.run
+  end
+end
+
+ListenExample.new.run
