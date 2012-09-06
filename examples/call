@@ -5,9 +5,7 @@ $:.push('lib', '../lib')
 require 'skype'
 Skype.DEBUG = true
 skype = Skype.new('ruby-skype-test')
-puts "Using ruby-skype-#{Skype.VERSION}"
 skype.connect
-puts "Connected using protocol version #{skype.protocol_version}"
 
 puts "Attempting to call the echo service..."
 skype.send_raw_command('CALL echo123')

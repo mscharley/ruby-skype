@@ -1,14 +1,13 @@
 #!/usr/bin/env ruby
 
-# This program simply attaches to Skype and runs an event loop. Can be used as a starting point, or a way to
-# listen for new update commands that we may not know about yet.
+# This program simply attaches to Skype and runs an event loop. Can be used as
+# a starting point, or a way to listen for new update commands that we may not
+# know about yet.
 
 $:.push('lib', '../lib')
 
 require 'skype'
 Skype.DEBUG = true
-puts "Using ruby-skype-#{Skype.VERSION}"
 skype = Skype.new('ruby-skype-listen-in')
 skype.connect
-puts "Connected using protocol version #{skype.protocol_version}"
 skype.run

@@ -59,6 +59,7 @@ class Skype
 
     @command_manager = CommandManager.new(self)
     @skype.add_observer(self, :received_command)
+    puts "Using ruby-skype-#{::Skype.VERSION}" if ::Skype.DEBUG
   end
 
   # Controls whether the library should output extra debugging information or
@@ -93,6 +94,8 @@ class Skype
       tick
       sleep(0.1)
     end
+
+    puts "Connected using protocol version #{protocol_version}" if ::Skype.DEBUG
     @user_status
   end
 
