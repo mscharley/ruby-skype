@@ -1,10 +1,21 @@
 
+require 'observer'
 require 'skype/command_manager'
 require 'skype/errors/exception_factory'
 require 'skype/data_maps/user_visibility'
 
 # This class is the main interface between Ruby and Skype.
+#
+# This class is Observable as is most public facing classes. All classes in
+# ruby-skype publish events via the Observable interface with arguments as
+# follows:
+#
+# * **[Symbol]** Event type
+# * **[Array]** Real arguments
+#
 class Skype
+  include Observable
+
   private
 
   def platform
