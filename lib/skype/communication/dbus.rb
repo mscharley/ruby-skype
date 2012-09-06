@@ -79,6 +79,7 @@ class Skype
         puts "-> #{message}" if ::Skype.DEBUG
         ret = @skype.Invoke(message)[0]
         puts "<- #{ret}" if ::Skype.DEBUG
+        receive(ret)
         ret
       end
 
