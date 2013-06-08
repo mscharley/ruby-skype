@@ -196,8 +196,6 @@ class Skype
     @skype.protocol_version
   end
 
-  protected
-
   # Callback for receiving updates from Skype.
   #
   # @param [String] command The command string to process.
@@ -206,6 +204,8 @@ class Skype
     @command_manager.process_command(command)
     puts "<= #{command}" if ::Skype.DEBUG
   end
+
+  protected
 
   def update_user_status(status)
     @user_status = status
