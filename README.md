@@ -6,7 +6,8 @@ Skype Public API for Ruby
 **Contributors:** [See contributors on GitHub][gh-contrib]  
 **Bugs/Support:** [Github Issues][gh-issues]  
 **Copyright:** 2012  
-**License:** [MIT license][license]
+**License:** [MIT license][license]  
+**Status:** *Defunct* - [Skype FAQ explaining in detail][skype-faq]
 
 Synopsis
 --------
@@ -65,4 +66,5 @@ Generate a Ruby friendly front-end to access the Skype public API.
   [gh-contrib]: https://github.com/mscharley/ruby-skype/graphs/contributors
   [gh-issues]: https://github.com/mscharley/ruby-skype/issues
   [gh-8]: https://github.com/mscharley/ruby-skype/issues/8
+  [skype-faq]: https://support.skype.com/en/faq/FA12349/skype-says-my-application-will-stop-working-with-skype-in-december-2013-why-is-that
 
